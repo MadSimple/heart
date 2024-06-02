@@ -27,14 +27,13 @@ Alphabetical list of features: [any](#any-every), [ascending](#ascending-descend
 [zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, *](#Operators-for-strings-and-lists)
 
 #### (Strings are treated as lists in Haskell, and have many of the same functions.)
-#
 
 ### ascending, descending
 Sort lists and strings:
 ```dart
 List<int> l = [4, 5, 1, 2, 3].ascending(); // [1, 2, 3, 4, 5]
 List<int> l2 = [4, 5, 1, 2, 3].descending(); // [5, 4, 3, 2, 1]
- 
+
 String s = 'hello'.ascending(); // 'ehllo'
 String s = 'hello'.descending(); // 'ollhe'
 ```
@@ -248,7 +247,7 @@ returns a list of lists (or strings) by adding elements from the beginning:
 ```
 ```tails``` returns a list of lists (or strings) by removing one element at a time from the beginning:
 ```dart
-[1, 2, 3].tails() 
+[1, 2, 3].tails()
 // [[1, 2, 3], [2, 3], [3], []]
 
 // nums function defined in this package
