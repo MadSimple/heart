@@ -176,7 +176,7 @@ List<int> l = [1, 1, 2, 3].replaceFirst(1, 99); // [99, 1, 2, 3]
 List<int> l2 = [1, 1, 2, 3].replaceFirst(1, [99,100]); // [99, 100, 1, 2, 3]
 
 // No replacement value means it will simply delete:
-List<int> l3 = [1, 1, 2, 3].replaceFirst(1); \\ [1, 2, 3]
+List<int> l3 = [1, 1, 2, 3].replaceFirst(1); // [1, 2, 3]
 ```
 
 ```dart
