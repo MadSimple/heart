@@ -61,6 +61,14 @@ int c = [1, 2, 1, 3].count(1); // 2
 'hello world'.count('ll') // 1
 ```
 
+### elemIndices
+Find where element occurs in a list, or substring occurs in a string:
+```dart
+List<int> l = [1, 2, 1, 2, 1].elemIndices(1); // [0, 2, 4]
+List<int> l2 = 'hello'.elemIndices('l'); // [2, 3]
+List<int> l3 = 'hello'.elemIndices('ll'); // [2]
+```
+
 ### nub
 Remove duplicates:
 ```dart
@@ -78,14 +86,6 @@ Reverse a string or list:
 ```dart
 List<int> l = [1, 2, 3].backwards(); // [3, 2, 1]
 String s = 'hello'.backwards(); // 'olleh'
-```
-
-### elemIndices
-Find where element occurs in a list, or substring occurs in a string:
-```dart
-List<int> l = [1, 2, 1, 2, 1].elemIndices(1); // [0, 2, 4]
-List<int> l2 = 'hello'.elemIndices('l'); // [2, 3]
-List<int> l3 = 'hello'.elemIndices('ll'); // [2]
 ```
 
 ### shuffled
