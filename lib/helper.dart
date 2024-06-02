@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:math';
 
 /// Helper functions used for extension methods.
-/// See hart.dart for more extensive documentation.
+/// See heart.dart for more extensive documentation.
 
 /// Increment or decrement Strings, used for ^ operator.
 String incrementString(String s, int n) {

@@ -218,20 +218,6 @@ extension HeartIterableE<E> on Iterable<E> {
     return h.listNub(this, it);
   }
 
-  // /// Removes first occurrence using [bigEquals].
-  // ///
-  // /// [1, 2, 3, 1].delete(1) returns [2,3,1].
-  // List<E> delete(E itemToDelete) {
-  //   return h.listDelete(itemToDelete, this);
-  // }
-  //
-  // /// Removes all occurrences using [bigEquals].
-  // ///
-  // /// [1, 1, 2, 2, 3, 3].deleteAll(2) returns [1, 1, 3, 3]
-  // List<E> deleteAll(E itemToDelete) {
-  //   return h.listDeleteAll(itemToDelete, this);
-  // }
-
   /// Adds elements from input that aren't in original value.
   ///
   /// [1, 2, 3].union([2, 3, 4, 4]) returns [1, 2, 3, 4]
@@ -373,6 +359,7 @@ extension HeartIterableNum on Iterable<num> {
     return h.productNum(this).toDouble();
   }
 
+  /// Returns a double even if inputs are ints.
   double average() {
     return h.listAverage(this);
   }
