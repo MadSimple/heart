@@ -9,7 +9,7 @@ void main() {
       ['spades'] * 13 + ['hearts'] * 13 + ['diamonds'] * 13 + ['clubs'] * 13;
 
   List deckOfCards = zip([cardValues, cardSuits]);
-  List shuffledDeck = zip([cardValues, cardSuits]).shuffled();
+  List shuffledDeck = deckOfCards.shuffled();
 
   print('Sorted deck: \n$deckOfCards\n');
 
