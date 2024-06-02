@@ -6,7 +6,7 @@
 
 Extension methods for strings and lists, inspired by Haskell.
 #
-Alphabetical list: [any](#any-every), [ascending](#ascending-descending), [average](#sum-product-average),
+Alphabetical list of features: [any](#any-every), [ascending](#ascending-descending), [average](#sum-product-average),
 [backwards](#backwards), [bigContains](#bigContains), [bigEquals](#bigEquals),
 [chr](#chr-chrs), [chrs](#chr-chrs), [concat](#concat),  
 [count](#count), [descending](#ascending-descending),
