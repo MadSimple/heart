@@ -24,7 +24,7 @@ Alphabetical list of features: [any](#any-every), [ascending](#ascending-descend
 [tail](#head-tails-last-inits), [tails](#head-tails-last-inits), [toStringList](#toStringList),
 [union](#union-intersect), [unwords](#unwords), [wordCount](#words-wordCount-letters-letterCount),
 [words](#words-wordCount-letters-letterCount),
-[zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, *, ^](#Operators-for-strings-and-lists)
+[zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, ^, *](#Operators-for-strings-and-lists)
 
 #### (Strings are treated as lists in Haskell, and have many of the same functions.)
 
