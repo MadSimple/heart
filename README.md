@@ -5,7 +5,7 @@
 
 
 Extension methods for strings and lists, inspired by Haskell.
-
+#
 Alphabetical list: [any](#any-every), [ascending](#ascending-descending), [average](#sum-product-average),
 [backwards](#backwards), [bigContains](#bigContains), [bigEquals](#bigEquals),
 [chr](#chr-chrs), [chrs](#chr-chrs), [concat](#concat),  
@@ -26,8 +26,8 @@ Alphabetical list: [any](#any-every), [ascending](#ascending-descending), [avera
 [words](#words-wordCount-letters-letterCount),
 [zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, *](#Operators-for-strings-and-lists)
 
-(Strings are treated as lists in Haskell, and have many of the same functions.)
-
+#### (Strings are treated as lists in Haskell, and have many of the same functions.)
+#
 
 ### ascending, descending
 Sort lists and strings:
