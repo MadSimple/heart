@@ -24,7 +24,7 @@ Alphabetical list of features: [any](#any-every), [ascending](#ascending-descend
 [tail](#head-tails-last-inits), [tails](#head-tails-last-inits), [toStringList](#toStringList),
 [union](#union-intersect), [unwords](#unwords), [wordCount](#words-wordCount-letters-letterCount),
 [words](#words-wordCount-letters-letterCount),
-[zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, *](#Operators-for-strings-and-lists)
+[zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, *, ^](#Operators-for-strings-and-lists)
 
 #### (Strings are treated as lists in Haskell, and have many of the same functions.)
 
@@ -512,6 +512,13 @@ Compare strings according to their character codes:
 ```
 (If elements cannot be compared, both >= and <= will return false.)
 
+### ^
+Get next String by character codes:
+```dart
+String s = 'a'^1; // 'b'
+'b'^(-1) // 'a'
+'abc'^1 // 'bcd
+```
 ### *
 Repeat elements of a list with ```*```
 ```dart
