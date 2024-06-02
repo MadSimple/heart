@@ -362,7 +362,7 @@ List<String> l = [1, 2, 3].toStringList(); // ['1', '2', '3']
 ```zip``` takes in a list of lists, returns a list of lists where corresponding elements are paired together.
 ```dart
 List l = zip([['one','two','three'], [1,2,3]]);
-// [[one, 1], [two, 2], [three, 3]]
+// [['one', 1], ['two', 2], ['three', 3]]
 ```
 ```zip2``` takes in a list of 2 lists and performs a function between corresponding elements (similar to Haskell's zipWith):
 ```dart
