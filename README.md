@@ -67,7 +67,7 @@ int c = [1, 2, 1, 3].count(1); // 2
 Find where element occurs in a list, or substring occurs in a string:
 ```dart
 List<int> l = [1, 2, 1, 2, 1].elemIndices(1); // [0, 2, 4]
-// Works on nested iterables with bigEquals function in this package
+// Works on nested iterables by using bigEquals function in this package
 List<int> l2 = [[1,2], [1,2], [3,4]].elemIndices([1,2]); // [0, 1]
 List<int> l3 = 'hello'.elemIndices('l'); // [2, 3]
 List<int> l4 = 'hello'.elemIndices('ll'); // [2]
