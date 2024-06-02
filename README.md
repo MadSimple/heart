@@ -1,4 +1,4 @@
-# Hart
+# Heart
 
 
 
@@ -29,7 +29,7 @@ Alphabetical list: [any](#any-every), [ascending](#ascending-descending), [avera
 (Strings are treated as lists in Haskell, and have many of the same functions.)
 
 
-### ascending, descending {#ascending-descending}
+### ascending, descending
 Sort lists and strings:
 ```dart
 List<int> l = [4, 5, 1, 2, 3].ascending(); // [1, 2, 3, 4, 5]
@@ -39,7 +39,7 @@ String s = 'hello'.ascending(); // 'ehllo'
 String s = 'hello'.descending(); // 'ollhe'
 ```
 
-### sum, product, average {#sum-product-average}
+### sum, product, average
 Add or multiply numbers in a list:
 ```dart
 int s = [1, 2, 3].sum(); // 6
@@ -50,7 +50,7 @@ double a = [11, 2, 33, 55, 7, 2, 1].average(); // 15.857142857142858
 'abc'.average() // 'b'
 ```
 
-### count {#count}
+### count
 Count occurrences in a list or string:
 ```dart
 int c = [1, 2, 1, 3].count(1); // 2
@@ -62,7 +62,7 @@ int c = [1, 2, 1, 3].count(1); // 2
 'hello world'.count('ll') // 1
 ```
 
-### nub {#nub}
+### nub
 Remove duplicates:
 ```dart
 List<int> l = [1, 2, 1, 2].nub() // [1, 2]
@@ -116,7 +116,7 @@ List<int> l = [1, 2, 3].intersperse(0); // [1, 0, 2, 0, 3]
 String s = 'hello'.intersperse('-'); // 'h-e-l-l-o'
 ```
 
-### intercalate (in-TER-kuh-late) {#intercalate}
+### intercalate (in-TER-kuh-late)
 
 Inserts a list between lists (or string between strings) and concatenates the result:
 ```dart
@@ -138,7 +138,7 @@ Equivalent to ```.where().toList()```, but also works on Strings:
 String s = 'hello world'.filter((char) => char < 'j'); // 'he d'
 ```
 
-### any, every {#any-every}
+### any, every
 (These already exist for lists)
 ```dart
 bool b = 'hello'.any((char) => char == 'h'); // true
@@ -291,7 +291,8 @@ Extra characters get added to the end:
 ```
 
 ### riffleIn, riffleOut
-Splits list or string in half and interleaves them:
+Riffle shuffle: splits list or string in half and interleaves them
+![image](https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Faro_shuffles.svg/250px-Faro_shuffles.svg.png)
 ```dart
 // .riffleOut interleaves first half to second.
 List<int> l = [1, 2, 3, 4, 5, 6].riffleOut();
@@ -495,7 +496,7 @@ bool b = l.contains(m); // false
 bool b2 = l.bigContains(m); // true
 ```
 
-## Operators for strings and lists {#operators}
+## Operators for strings and lists
 ### >, >=, <, <=, * 
 
 Compare elements in two lists, starting at the beginning:
