@@ -34,7 +34,7 @@ Sort lists and strings:
 ```dart
 List<int> l = [4, 5, 1, 2, 3].ascending(); // [1, 2, 3, 4, 5]
 List<int> l2 = [4, 5, 1, 2, 3].descending(); // [5, 4, 3, 2, 1]
- 
+
 String s = 'hello'.ascending(); // 'ehllo'
 String s = 'hello'.descending(); // 'ollhe'
 ```
@@ -248,7 +248,7 @@ returns a list of lists (or strings) by adding elements from the beginning:
 ```
 ```tails``` returns a list of lists (or strings) by removing one element at a time from the beginning:
 ```dart
-[1, 2, 3].tails() 
+[1, 2, 3].tails()
 // [[1, 2, 3], [2, 3], [3], []]
 
 // nums function defined in this package
@@ -292,6 +292,7 @@ Extra characters get added to the end:
 
 ### riffleIn, riffleOut
 Riffle shuffle: splits list or string in half and interleaves them
+
 ![image](https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Faro_shuffles.svg/250px-Faro_shuffles.svg.png)
 ```dart
 // .riffleOut interleaves first half to second.
@@ -481,9 +482,9 @@ listEquals([[1, 2], [3, 4]], [[1, 2], [3, 4]]) // false
 ```dart
 bool a = bigEquals([1, 2], [1, 2]); // true
 bool b = bigEquals(
-      {1: 2, 3: [4,5]},
-      {3: nums(4, 5), 1: 2}
-  ); // true
+    {1: 2, 3: [4,5]},
+    {3: nums(4, 5), 1: 2}
+); // true
 ```
 ## bigContains
 ```bigContains``` uses ```bigEquals``` to check if a list contains an element:
