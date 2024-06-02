@@ -497,7 +497,7 @@ bool b2 = l.bigContains(m); // true
 ```
 
 ## Operators for strings and lists
-### >, >=, <, <=, * 
+### >, >=, <, <=
 
 Compare elements in two lists, starting at the beginning:
 ```dart
@@ -512,6 +512,7 @@ Compare strings according to their character codes:
 ```
 (If elements cannot be compared, both >= and <= will return false.)
 
+### *
 Repeat elements of a list with ```*```
 ```dart
 List<int> l = [1, 2] * 3; // [1, 2, 1, 2, 1, 2]
