@@ -515,9 +515,9 @@ Compare strings according to their character codes:
 ### ^
 Get next String by character codes:
 ```dart
-String s = 'a'^1; // 'b'
-'b'^(-1) // 'a'
-'abc'^1 // 'bcd
+String s = 'a' ^ 1; // 'b'
+'b' ^ (-1) // 'a'
+'abc' ^ 1 // 'bcd
 ```
 ### *
 Repeat elements of a list with ```*```
