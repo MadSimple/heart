@@ -138,6 +138,7 @@ List<int> l = [1, 2, 3, 4].filter((x) => pow(x, 3) < 10); // [1, 2]
 ```
 Equivalent to ```.where().toList()```, but also works on Strings:
 ```dart
+// '<' operator defined in this package
 String s = 'hello world'.filter((char) => char < 'j'); // 'he d'
 ```
 
