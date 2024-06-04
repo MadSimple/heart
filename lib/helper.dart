@@ -1,8 +1,10 @@
+/// Helper functions used for extension methods.
+/// See heart.dart for more extensive documentation.
+library;
+
 import 'dart:collection';
 import 'dart:math';
 
-/// Helper functions used for extension methods.
-/// See heart.dart for more extensive documentation.
 
 /// Increment or decrement Strings, used for ^ operator.
 String incrementString(String s, int n) {
@@ -19,6 +21,11 @@ String incrementString(String s, int n) {
 
 /// Insert a String between other Strings and concatenate.
 String intercalateString(String s, Iterable<String> l) {
+  if (l.isEmpty) {
+    return '';
+  } else if (s.isEmpty) {
+    return concatStrings(l);
+  }
   String result = '';
   List<String> copy = List.from(l);
   copy.removeLast();
@@ -501,7 +508,10 @@ List<T> dropList<T>(int n, Iterable<T> l) {
 
 /// Drop first n characters.
 String dropString(int n, String s) {
-  if (s.isEmpty || n >= s.length || n < 0) {
+  if (n <= 0) {
+    return s;
+  }
+  if (s.isEmpty || n >= s.length) {
     return '';
   }
   return s.substring(n);

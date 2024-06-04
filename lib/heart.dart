@@ -1,3 +1,4 @@
+/// Extension methods, with extra functions at the bottom
 library heart;
 
 import 'helper.dart' as h;
@@ -268,10 +269,25 @@ extension HeartIterableE<E> on Iterable<E> {
     return h.listSubtractAll(this, sublist);
   }
 
+  /// Similar to .replaceFirst for Strings.
+  ///
+  /// [1, 1, 2, 3].replaceFirst(1, 99) returns [99, 1, 2, 3].
+  ///
+  /// [1, 1, 2, 3].replaceFirst(1, [99,100]) returns [99, 100, 1, 2, 3].
+  ///
+  /// [1, 1, 2, 3].replaceFirst(1) returns [1, 2, 3].
   List<E> replaceFirst(E from, [dynamic to]) {
     return h.replaceList(this, false, from, to);
   }
 
+  /// Similar to .replaceAll for Strings.
+  ///
+  /// [1, 1, 2, 3].replaceAll(1, 99) returns [99, 99, 2, 3].
+  ///
+  /// [1, 1, 2, 3].replaceAll(1, [99, 100]) returns
+  /// [99, 100, 99, 100, 2, 3].
+  ///
+  /// [1, 1, 2, 3].replaceAll(1) returns [2, 3].
   List<E> replaceAll(E from, [dynamic to]) {
     return h.replaceList(this, true, from, to);
   }
@@ -578,7 +594,7 @@ extension HeartString on String {
   /// Returns a List of Strings that groups characters together
   /// if consecutive elements meet criteria.
   ///
-  /// 'helloworld!'.groupBy((a, b) => a < b)
+  /// 'helloworld!'.groupBy((a, b) => a <= b)
   /// returns ['h', 'ellow', 'or', 'l', 'd', '!'],
   /// where each element is sorted by character codes.
   List<String> groupBy(bool Function(String a, String b) groupFunction) {
