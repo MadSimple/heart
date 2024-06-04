@@ -19,3 +19,7 @@
 ## 0.1.2
 
 * Documentation update
+
+## 0.1.3
+
+* Formatting file
