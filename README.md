@@ -4,24 +4,25 @@
 Extension methods for strings and lists, inspired by Haskell.
 ###
 Alphabetical list of features: [any](#any-every), [ascending](#ascending-descending), [average](#sum-product-average),
-[backwards](#backwards), [bigContains](#bigContains), [bigEquals](#bigEquals),
-[chr](#chr-chrs), [chrs](#chr-chrs), [concat](#concat),  
-[count](#count), [descending](#ascending-descending),
-[drop](#drop-dropWhile), [dropWhile](#drop-dropWhile), [elemIndices](#elemIndices), [every](#any-every),
-[filter](#filter), [group](#group-groupBy), [groupBy](#group-groupBy),
-[head](#head-tails-last-inits), [inits](#head-tails-last-inits), [insertInOrder](#insertInOrder),
-[intercalate](#intercalate), [interleave](#interleave), [intersect](#union-intersect), [intersperse](#intersperse),
-[isLowerCase](#isUpperCase-isLowerCase), [isUpperCase](#isUpperCase-isLowerCase),
-[last](#head-tails-last-inits), [letterCount](#words-wordCount-letters-letterCount),
-[letters](#words-wordCount-letters-letterCount),
-[nub](#nub), [nums](#nums), [product](#sum-product-average), [removeWhitespace](#removeWhitespace),
-[replaceAll](#replaceFirst-replaceAll), [replaceFirst](#replaceFirst-replaceAll),
-[riffleIn](#riffleIn-riffleOut), [riffleOut](#riffleIn-riffleOut), [shuffled](#shuffled), [splitAt](#splitAt),
-[subtract](#subtract-subtractAll), [subtractAll](#subtract-subtractAll), [sum](#sum-product-average),
-[tail](#head-tails-last-inits), [tails](#head-tails-last-inits), [toStringList](#toStringList),
-[union](#union-intersect), [unwords](#unwords), [wordCount](#words-wordCount-letters-letterCount),
-[words](#words-wordCount-letters-letterCount),
-[zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, ^, *](#Operators-for-strings-and-lists)
+[backwards](#backwards),
+[chr](#chr-chrs), [chrs](#chr-chrs), [concat](#concat),
+[count](#count), [deepContains](#deepcontains), [deepEquals](#deepequals),
+[descending](#ascending-descending),
+[drop](#drop-dropwhile), [dropWhile](#drop-dropwhile), [elemIndices](#elemindices), [every](#any-every),
+[filter](#filter), [group](#group-groupby), [groupBy](#group-groupby),
+[head](#head-tails-last-inits), [inits](#head-tails-last-inits), [insertInOrder](#insertinorder),
+[intercalate](#intercalate-in-ter-kuh-late), [interleave](#interleave), [intersect](#union-intersect), [intersperse](#intersperse),
+[isLowerCase](#isuppercase-islowercase), [isUpperCase](#isuppercase-islowercase),
+[last](#head-tails-last-inits), [letterCount](#words-wordcount-letters-lettercount),
+[letters](#words-wordcount-letters-lettercount),
+[nub](#nub), [nums](#nums), [product](#sum-product-average), [removeWhitespace](#removewhitespace),
+[replaceAll](#replacefirst-replaceall), [replaceFirst](#replacefirst-replaceall),
+[riffleIn](#rifflein-riffleout), [riffleOut](#rifflein-riffleout), [shuffled](#shuffled), [splitAt](#splitat),
+[subtract](#subtract-subtractall), [subtractAll](#subtract-subtractall), [sum](#sum-product-average),
+[tail](#head-tails-last-inits), [tails](#head-tails-last-inits), [toStringList](#tostringlist),
+[union](#union-intersect), [unwords](#unwords), [wordCount](#words-wordcount-letters-lettercount),
+[words](#words-wordcount-letters-lettercount),
+[zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, ^, *](#operators-for-strings-and-lists)
 
 ###
 
@@ -64,7 +65,7 @@ int c = [1, 2, 1, 3].count(1); // 2
 Find where element occurs in a list, or substring occurs in a string:
 ```dart
 List<int> l = [1, 2, 1, 2, 1].elemIndices(1); // [0, 2, 4]
-// Works on nested iterables by using bigEquals function in this package
+// Works on nested iterables by using deepEquals function in this package
 List<int> l2 = [[1,2], [1,2], [3,4]].elemIndices([1,2]); // [0, 1]
 List<int> l3 = 'hello'.elemIndices('l'); // [2, 3]
 List<int> l4 = 'hello'.elemIndices('ll'); // [2]
@@ -470,32 +471,42 @@ nums(1, 5, 2) // [1, 3, 5]
 nums(1, -5, 2) // [1, -1, -3, -5]
 ```
 
-## bigEquals
-```bigEquals``` can check equality for nested lists, sets, and maps:
+
+
+
+## deepEquals
+
+```deepEquals``` can check equality for nested lists, sets, and maps:
 
 By default, Dart doesn't compare elements in a list for equality.
-Dart's separate ```listEquals``` function doesn't compare nested lists:
+
 ```dart
 [1, 2] == [1, 2] // false
-listEquals([[1, 2], [3, 4]], [[1, 2], [3, 4]]) // false
 ```
-```bigEquals``` solves this:
+
+Use deepEquals for this and other iterables:
+
 ```dart
-bool a = bigEquals([1, 2], [1, 2]); // true
-bool b = bigEquals(
+bool a = deepEquals([1, 2], [1, 2]); // true
+bool b = deepEquals(
     {1: 2, 3: [4,5]},
     {3: nums(4, 5), 1: 2}
 ); // true
+bool c = deepEquals(1, 1); // true
 ```
-## bigContains
-```bigContains``` uses ```bigEquals``` to check if a list contains an element:
+
+
+## deepContains
+```deepContains``` uses ```deepEquals``` to check if an iterable contains an element:
+
 ```dart
 List l = [[1, 2], {3: 4}];
 Map m = {3: 4};
+
 // By default:
 bool b = l.contains(m); // false
 
-bool b2 = l.bigContains(m); // true
+bool b2 = l.deepContains(m); // true
 ```
 
 ## Operators for strings and lists
