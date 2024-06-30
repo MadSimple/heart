@@ -1,7 +1,7 @@
 /// Extension methods, with extra functions at the bottom
 library heart;
 
-import 'helper.dart' as h;
+import 'helper/helper.dart' as h;
 
 /// Compare dynamic iterables with deepEquals
 extension HeartIterable on Iterable {
