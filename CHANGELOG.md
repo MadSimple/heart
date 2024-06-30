@@ -39,3 +39,8 @@
 ## 0.2.2
 
 * Min Dart SDK lowered to 2.18
+
+## 0.3.0
+
+* Min Dart SDK 2.19
+* Fixed dangling comment in helper.dart

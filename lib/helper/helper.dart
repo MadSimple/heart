@@ -1,6 +1,6 @@
 /// Helper functions used for extension methods.
 /// See heart.dart for more extensive documentation.
-// library;
+library;
 
 import 'dart:collection';
 import 'package:collection/collection.dart';
