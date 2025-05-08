@@ -1,7 +1,7 @@
 /// Extension methods, with extra functions at the bottom
 library heart;
 
-import 'helper/helper.dart' as h;
+import 'src/helper.dart' as h;
 
 /// Compare dynamic iterables with deepEquals
 extension HeartIterable on Iterable {
@@ -341,6 +341,9 @@ extension HeartIterableE<E> on Iterable<E> {
   ///
   /// [1, 2, 3, 4, 5, 6].riffleIn() returns
   /// [4, 1, 5, 2, 6, 3]
+  ///
+  /// Odd number of elements:
+  /// [1, 2, 3, 4, 5].riffleIn() returns [3, 1, 4, 2, 5]
   List<E> riffleIn() {
     return h.riffleInList(this);
   }
@@ -349,6 +352,9 @@ extension HeartIterableE<E> on Iterable<E> {
   ///
   /// [1, 2, 3, 4, 5, 6].riffleOut() returns
   /// [1, 4, 2, 5, 3, 6].
+  ///
+  /// Odd number of elements:
+  /// [1, 2, 3, 4, 5].riffleOut() returns [1, 4, 2, 5, 3]
   List<E> riffleOut() {
     return h.riffleOutList(this);
   }
@@ -941,7 +947,7 @@ extension HeartString on String {
   ///
   /// 'hi' >= 'hello' returns true.
   bool operator >=(String s) {
-    return h.greaterThanString(this, s) || this == s;
+    return this == s || h.greaterThanString(this, s);
   }
 
   /// Compares code units character by character.
@@ -963,7 +969,7 @@ extension HeartString on String {
   ///
   /// 'hello' <= 'hi' returns true.
   bool operator <=(String s) {
-    return h.lessThanString(this, s) || this == s;
+    return this == s || h.lessThanString(this, s);
   }
 }
 
@@ -995,8 +1001,71 @@ extension HeartInt on int {
 /// nums(1, 5, 2) = [1, 3, 5]
 ///
 /// nums(0) = []
+@Deprecated("Use 'range' or 'inclusive' instead of 'nums'")
 List<int> nums(int a, [int? b, int? step]) {
   return h.nums(a, b, step);
+}
+
+/// Generates a List of integers.
+/// range(n) is always in ascending order, doesn't include n itself.
+/// range(3) returns [0, 1, 2]
+/// range(-3) returns [-2, -1, 0]
+/// range(0) returns []
+///
+/// With two arguments, result doesn't include the second:
+/// range(1, 3) returns [1, 2]
+/// range(-3, -1) returns [-3, -2]
+/// range(0, -3) returns [0, -1, -2]
+/// range(1, 1) returns []
+///
+/// Optional [step] must be positive if a < b, negative if a > b.
+/// range(1, 3, 2) returns [1]
+/// range(-2, 2, 2) returns [-2, 0]
+/// range(-3, -7, -2) returns [-3, -5]
+///
+/// [step] isn't considered if a = b:
+/// range(1, 1, -100) returns []
+List<int> range(int a, [int? b, int? step]) {
+  return h.range(a, b, step);
+}
+
+/// Uses character codes and [range].
+/// Strings must have exactly 1 character.
+///
+/// rangeString('a', 'f') returns 'abcde'
+/// rangeString('c', 'a') returns 'cb'
+/// rangeString('a', 'z', 2) returns 'acegikmoqsuwy'
+String rangeString(String a, [String? b, int? step]) {
+  return h.rangeString(a, b, step);
+}
+
+/// Generates an inclusive List of integers.
+/// inclusive(3) returns [0, 1, 2, 3]
+/// inclusive(-3) returns [-3, -2, -1, 0]
+///
+/// inclusive(1, 3) returns [1, 2, 3]
+/// inclusive(-3, -1) returns [-3, -2, -1]
+/// inclusive(0, -3) returns [0, -1, -2, -3]
+///
+/// Optional [step] must be positive if a < b, negative if a > b.
+/// inclusive(1, 3, 2) returns [1, 3]
+/// inclusive(-3, 1, 2) returns [-3, -1, 1]
+/// inclusive(1, -3, -2) returns [1, -1, -3]
+///
+/// [step] isn't considered if a = b:
+/// inclusive(1, 1, -100) returns [1]
+List<int> inclusive(int a, [int? b, int? step]) {
+  return h.inclusive(a, b, step);
+}
+
+/// Uses character codes and [inclusive].
+/// Strings must have exactly 1 character.
+///
+/// inclusiveString('a', 'c') returns 'abc'
+/// inclusiveString('c', 'a') returns 'cba'
+/// inclusiveString('a', 'g', 2) returns 'aceg'
+String inclusiveString(String a, [String? b, int? step]) {
+  return h.inclusiveString(a, b, step);
 }
 
 /// Checks for equality of multiple data types, including nested iterables.
@@ -1071,3 +1140,5 @@ List zip4<T>(Iterable<Iterable<T>> it,
     dynamic Function(T a, T b, T c, T d) zipFunction) {
   return h.zip4(it, zipFunction);
 }
+
+//TODO: rank character occurrences; option to remove symbols in words() and letters(); look in shufflez scratch

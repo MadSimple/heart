@@ -10,12 +10,14 @@ Alphabetical list of features: [any](#any-every), [ascending](#ascending-descend
 [descending](#ascending-descending),
 [drop](#drop-dropwhile), [dropWhile](#drop-dropwhile), [elemIndices](#elemindices), [every](#any-every),
 [filter](#filter), [group](#group-groupby), [groupBy](#group-groupby),
-[head](#head-tails-last-inits), [inits](#head-tails-last-inits), [insertInOrder](#insertinorder),
+[head](#head-tails-last-inits), [inclusive](#range-inclusive), [inclusiveString](#rangestring-inclusivestring), 
+[inits](#head-tails-last-inits), [insertInOrder](#insertinorder),
 [intercalate](#intercalate-in-ter-kuh-late), [interleave](#interleave), [intersect](#union-intersect), [intersperse](#intersperse),
 [isLowerCase](#isuppercase-islowercase), [isUpperCase](#isuppercase-islowercase),
 [last](#head-tails-last-inits), [letterCount](#words-wordcount-letters-lettercount),
 [letters](#words-wordcount-letters-lettercount),
-[nub](#nub), [nums](#nums), [product](#sum-product-average), [removeWhitespace](#removewhitespace),
+[nub](#nub), [product](#sum-product-average), [range](#range-inclusive), [rangeString](#rangestring-inclusivestring),
+ [removeWhitespace](#removewhitespace),
 [replaceAll](#replacefirst-replaceall), [replaceFirst](#replacefirst-replaceall),
 [riffleIn](#rifflein-riffleout), [riffleOut](#rifflein-riffleout), [shuffled](#shuffled), [splitAt](#splitat),
 [subtract](#subtract-subtractall), [subtractAll](#subtract-subtractall), [sum](#sum-product-average),
@@ -209,7 +211,7 @@ String s = 'hello'.subtractAll('lo'); // 'he'
 It doesn't remove duplicates from original, but doesn't add duplicates from input.
 
 ```dart
-List<int> l = [1, 1, 2].union([1, 2, 3]); // [1, 1, 2, 3]
+List<int> l = [1, 1, 2, 3].union([2, 3, 4, 4]); // [1, 1, 2, 3, 4]
 String s = 'hello'.union(' world'); // 'hello wrd'
 ```
 (Use ```.nub()``` to remove duplicates, and concatenate normally to keep duplicates.)
@@ -253,8 +255,8 @@ returns a list of lists (or strings) by adding elements from the beginning:
 [1, 2, 3].tails()
 // [[1, 2, 3], [2, 3], [3], []]
 
-// nums function defined in this package
-List<List<int>> twelveDaysOfChristmas = nums(12, 1).tails().backwards();
+// inclusive function defined in this package
+List<List<int>> twelveDaysOfChristmas = inclusive(12, 1).tails().backwards();
 // [[], [1], [2, 1], [3, 2, 1], [4, 3, 2, 1], [5, 4, 3, 2, 1], [6, 5, 4, 3, 2, 1], [7, 6, 5, 4, 3, 2, 1], [8, 7, 6, 5, 4, 3, 2, 1], [9, 8, 7, 6, 5, 4, 3, 2, 1], [10, 9, 8, 7, 6, 5, 4, 3, 2, 1], [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1], [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]]
 
 'hello'.tails()
@@ -305,10 +307,10 @@ List<int> l = [1, 2, 3, 4, 5, 6].riffleOut();
 List<int> l2 = [1, 2, 3, 4, 5, 6].riffleIn();
 // [4, 1, 5, 2, 6, 3]
 
-String s = 'hello'.riffleOut();
-// 'hleol'
-String s2 = 'hello'.riffleIn();
-// 'lhleo'
+String s = '12345'.riffleOut();
+// '14253'
+String s2 = '12345'.riffleIn();
+// '31425'
 ```
 ### group, groupBy
 ```group``` combines consecutive elements together if they are equal:
@@ -452,31 +454,53 @@ bool b5 = 'á'.isLowerCase(ignoreSymbols: false); // true
 
 
 
-### nums
-Generate a list of integers:
-```dart
-List<int> l = nums(5); // [0, 1, 2, 3, 4]
+### range, inclusive
+Generates a list of integers:
 
-nums(-5) // [-4, -3, -2, -1, 0]
-nums(0) // []
-```
-Two values generates an inclusive range:
+
 ```dart
-nums(1, 5) // [1, 2, 3, 4, 5]
-nums(1, -5) // [1, 0, -1, -2, -3, -4, -5]
-```
-Three values adds a step count. Step count must be positive:
-```dart
-nums(1, 5, 2) // [1, 3, 5]
-nums(1, -5, 2) // [1, -1, -3, -5]
+// "for(int i in range(5))" is the same as "for(int i = 0; i < 5; i++)"
+
+List<int> l = range(5); // [0, 1, 2, 3, 4]
+inclusive(5) // [0, 1, 2, 3, 4, 5]
+
+range(-5) // [-4, -3, -2, -1, 0]
+inclusive(-5) // [-5, -4, -3, -2, -1, 0]
+range(0) // []
+inclusive(0) // [0]
 ```
 
+With two arguments, ```inclusive``` includes the second one, ```range``` does not .
 
+```dart
+range(1, 5) // [1, 2, 3, 4]
+inclusive(1, 5) // [1, 2, 3, 4, 5]
+range(1, -2) // [1, 0, -1]
+inclusive(1, -2) // [1, 0, -1, -2]
+```
+Third argument adds a step count: 
+```dart
+range(1, 5, 2) // [1, 3]
+inclusive(1, 5, 2) // [1, 3, 5]
+range(1, -5, -2) // [1, -1, -3]
+inclusive(1, -5, -2) // [1, -1, -3, -5]
+```
 
+### rangeString, inclusiveString
+Similar to ```range``` and ```inclusive```. Strings must have exactly one character:
+```dart
+rangeString('a', 'f') // 'abcde'
+rangeString('c', 'a') // 'cb'
+rangeString('a', 'g', 2) // 'ace'
+
+inclusiveString('a', 'c') // 'abc'
+inclusiveString('c', 'a') // 'cba'
+inclusiveString('a', 'g', 2) // 'aceg'
+```
 
 ## deepEquals
 
-```deepEquals``` can check equality for nested lists, sets, and maps:
+```deepEquals``` can check equality for nested lists, sets, and maps.
 
 By default, Dart doesn't compare elements in a list for equality.
 
@@ -484,13 +508,13 @@ By default, Dart doesn't compare elements in a list for equality.
 [1, 2] == [1, 2] // false
 ```
 
-Use deepEquals for this and other iterables:
+Use ```deepEquals``` for this and other iterables:
 
 ```dart
 bool a = deepEquals([1, 2], [1, 2]); // true
 bool b = deepEquals(
     {1: 2, 3: [4,5]},
-    {3: nums(4, 5), 1: 2}
+    {3: inclusive(4, 5), 1: 2}
 ); // true
 bool c = deepEquals(1, 1); // true
 ```

@@ -1,46 +1,57 @@
-## 0.0.1
+## 0.4.1
 
-* Initial release.
+* Changes to CHANGELOG and README
 
-## 0.0.2
+## 0.4.0
 
-* Documentation update
-
-## 0.1.0
-
-* drop(-n) for String has no effect instead of returning empty
-* Removed Flutter dependency, pure Dart
-* Documentation updates
-
-## 0.1.1
-
-* Documentation update
-
-## 0.1.2
-
-* Documentation update
-
-## 0.1.3
-
-* Formatting file
-
-## 0.1.4
-
-* README alphabetical links fixed
-
-## 0.2.0
-
-* bigEquals and bigContains are deprecated in favor of deepEquals and deepContains
-
-## 0.2.1
-
-* Removed version constraint from collection dependency to resolve version pinning error
-
-## 0.2.2
-
-* Min Dart SDK lowered to 2.18
+* ```range``` and ```inclusive``` added, ```nums``` deprecated
+* ```rangeString``` and ```inclusiveString``` also added
+* Moved helper.dart to src folder
 
 ## 0.3.0
 
 * Min Dart SDK 2.19
 * Fixed dangling comment in helper.dart
+
+## 0.2.2
+
+* Min Dart SDK lowered to 2.18
+
+## 0.2.1
+
+* Removed version constraint from collection dependency to resolve version pinning error
+
+## 0.2.0
+
+* ```bigEquals``` and ```bigContains``` are deprecated in favor of ```deepEquals``` and
+  ```deepContains```
+
+## 0.1.4
+
+* README alphabetical links fixed
+
+## 0.1.3
+
+* Formatting file
+
+## 0.1.2
+
+* Documentation update
+
+## 0.1.1
+
+* Documentation update
+
+## 0.1.0
+
+* ```drop(-n)``` for String has no effect instead of returning empty
+* Removed Flutter dependency, pure Dart
+* Documentation updates
+
+## 0.0.2
+
+* Documentation update
+
+## 0.0.1
+
+* Initial release.

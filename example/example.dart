@@ -13,14 +13,14 @@ void main() {
 
   print('Sorted deck: \n$deckOfCards\n');
 
-  print('Shuffled deck: \n$shuffledDeck');
+  print('Shuffled deck: \n$shuffledDeck\n');
 
   List redCards = shuffledDeck
-      .filter((elem) => elem.contains('hearts') || elem.contains('diamonds'));
+      .filter((card) => card.contains('hearts') || card.contains('diamonds'));
 
-  print('\nRed cards:\n$redCards');
+  print('Red cards:\n$redCards\n');
   // ----------
 
-  String countdown = nums(10, 1).toStringList().intercalate('-');
-  print('\n$countdown HAPPY NEW YEAR!');
+  String countdown = inclusive(10, 1).toStringList().intercalate('-');
+  print('$countdown HAPPY NEW YEAR!');
 }
