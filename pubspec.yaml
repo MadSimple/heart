@@ -1,6 +1,6 @@
 name: heart
 description: 'Extension methods for Strings and Lists, inspired by Haskell'
-version: 0.4.1
+version: 0.4.4
 homepage: 'https://github.com/MadSimple/heart/'
 
 environment:
@@ -12,6 +12,6 @@ dependencies:
 dev_dependencies:
   #  flutter_test:
   #    sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
   test: ^1.25.6
 

@@ -1,3 +1,15 @@
+## 0.4.4
+
+* Documentation correction
+
+## 0.4.3
+
+* Documentation correction
+
+## 0.4.2
+
+* Documentation correction
+
 ## 0.4.1
 
 * Changes to CHANGELOG and README
