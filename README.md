@@ -25,44 +25,12 @@ Alphabetical list of features: [after](#before-after), [any](#any-every), [ascen
 [words](#words-wordcount-letters-lettercount),
 [zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, ^, *](#operators-for-strings-and-lists)
 
-
-#### (Strings are treated as lists in Haskell, and have many of the same functions.)
-
 #### deepEquals, deepContains
 
-```deepEquals``` and the rest of the package uses Dart's ```DeepCollectionEquality``` whenever posssible .
+This package uses Dart's ```DeepCollectionEquality``` from [collection](https://pub.dev/packages/collection) whenever posssible, so ```deepEquals([1, 2], [1, 2])``` returns true, even though ```[1, 2] == [1, 2]``` is normally false. ```[{1: 2}, {2: 3}].deepContains({2: 3})``` is also true.
+#
 
-```deepEquals``` can check equality for nested lists, sets, and maps.
-
-By default, Dart doesn't compare elements in a list for equality.
-
-```dart
-[1, 2] == [1, 2] // false
-```
-
-Use ```deepEquals``` for this and other iterables:
-
-```dart
-bool a = deepEquals([1, 2], [1, 2]); // true
-bool b = deepEquals(
-    {1: 2, 3: [4,5]},
-    {3: inclusive(4, 5), 1: 2}
-); // true
-bool c = deepEquals(1, 1); // true
-```
-
-```deepContains``` uses ```deepEquals``` to check if an iterable contains an element:
-
-```dart
-List l = [[1, 2], {3: 4}];
-Map m = {3: 4};
-
-// By default:
-bool b = l.contains(m); // false
-
-bool b2 = l.deepContains(m); // true
-```
-
+#### (Strings are treated as lists in Haskell, and have many of the same functions.)
 
 ## ascending, descending
 Sort lists and strings:
@@ -93,7 +61,7 @@ Returns null if doesn't contain sublist:
 ```
 
 ## startsWith
-Dart already has this for strings:
+Dart already has this for strings.
 ```dart
 bool b = [1, 2, 3].startsWith([1, 2]); // true
 ```
@@ -145,7 +113,6 @@ Count occurrences in a list or string:
 int c = [1, 2, 1, 3].count(1); // 2
 // Note: '.indices([1]).length' gives same result, and can be used for sublists instead of one element
 
-// Works for nested iterables
 [{1,2}, [1,3]].count({1,2}) // 1
 
 'hello world'.count('l') // 3
@@ -157,11 +124,12 @@ Find where sublist occurs in a list, or substring occurs in a string:
 ```dart
 List<int> l = [1, 2, 1, 2, 1].indices([1]); // [0, 2, 4]
 [1, 2, 1, 2, 1].indices([1, 2]) // [0, 2]
+
 'hello'.indices('ll') // [2]
-// Works on nested iterables by using deepEquals function in this package
+
 [[1,2], [1,2], {3: 4}].indices([[1, 2], {3: 4}]) // [1]
 ```
-Optional ```exclusive``` parameter means the sublists at each index would be mutually exclusive:
+Optional ```exclusive``` parameter means the sublists at the result indices would be mutually exclusive:
 ```dart
 [1, 1, 1, 1].indices([1, 1]) // [0, 1, 2]
 [1, 1, 1, 1].indices([1, 1], exclusive: true) // [0, 2]
