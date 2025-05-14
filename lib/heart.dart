@@ -1,4 +1,4 @@
-/// Extension methods, with extra functions at the bottom
+/// Extension methods, with extra functions below
 library;
 
 import 'src/helper.dart' as h;
@@ -63,17 +63,6 @@ extension HeartIterable on Iterable {
     return h.deepContains(this, element);
   }
 
-  /// Returns true if iterable contains [element].
-  ///
-  /// By default, Dart does not check for nested iterables.
-  /// [[1,2], [3,4]].contains([1,2]) returns false, however
-  ///
-  /// [[1,2], [3,4]].bigContains([1,2]) returns true.
-  @Deprecated('Use \'deepContains\' instead.')
-  bool bigContains(var element) {
-    return h.bigContains(this, element);
-  }
-
   /// Count number of occurrences in an iterable,
   /// using [deepEquals].
   ///
@@ -100,8 +89,22 @@ extension HeartIterableE<E> on Iterable<E> {
   ///
   /// Uses [deepEquals] for nested iterables:
   /// [[1,2],[3,4]].elemIndices([1,2]) returns [0].
+  @Deprecated("Use 'indices' and wrap element in square brackets")
   List<int> elemIndices(E element) {
     return h.elemIndicesList(element, this);
+  }
+
+  /// Finds each index where sublist occurs.
+  /// Deprecated 'elemIndices' only searched for
+  /// one element and not sublist.
+  ///
+  /// [1, 2, 1, 2, 1].indices([1]) returns [0, 2, 4].
+  /// [1, 2, 1, 2, 1].indices([1, 2]) returns [0, 2].
+  ///
+  /// Uses [deepEquals] for nested iterables:
+  /// [[1,2],[3,4]].indices([[1,2]]) returns [0].
+  List<int> indices(Iterable<E> sublist, {bool exclusive = false}) {
+    return h.indicesList(this, sublist, exclusive: exclusive);
   }
 
   /// Converts all elements to Strings.
@@ -290,6 +293,9 @@ extension HeartIterableE<E> on Iterable<E> {
   /// [1, 1, 2, 3].replaceFirst(1, [99,100]) returns [99, 100, 1, 2, 3].
   ///
   /// [1, 1, 2, 3].replaceFirst(1) returns [1, 2, 3].
+  @Deprecated('''Use 'replace' instead.
+      [2, 2, 2].replaceFirst(2) = [2, 2, 2].replace([2], [], 1).
+      This can also be used to replace a sublist instead of one element''')
   List<E> replaceFirst(E from, [dynamic to]) {
     return h.replaceList(this, false, from, to);
   }
@@ -302,8 +308,30 @@ extension HeartIterableE<E> on Iterable<E> {
   /// [99, 100, 99, 100, 2, 3].
   ///
   /// [1, 1, 2, 3].replaceAll(1) returns [2, 3].
+  @Deprecated("Use 'replace' instead, wrap element in square brackets")
   List<E> replaceAll(E from, [dynamic to]) {
     return h.replaceList(this, true, from, to);
+  }
+
+  /// Successor to 'replaceFirst' and 'replaceAll'
+  /// [1, 1, 1].replace([1], [3]) returns [3, 3, 3]
+  /// [1, 1, 1, 1].replace([1, 1], [3]) returns [3, 3]
+  ///
+  /// Optional [count] replaces that many occurrences:
+  /// [1, 1, 1].replace([1], [3], 1) returns [3, 1, 1]
+  /// [1, 1, 1].replace([1], [], 1) returns [1, 1]
+  ///
+  /// High [count] does not add more elements:
+  /// [1, 1, 1].replace([1], [2], 100) returns [2, 2, 2]
+  /// Negative [count] returns the same:
+  /// [1, 1, 1].replace([1], [2], -100) returns [1, 1, 1]
+  ///
+  /// Replacing empty list inserts sublist before and after each element:
+  /// [1, 1, 1].replace([], [2]) returns [2, 1, 2, 1, 2, 1, 2]
+  /// [1, 1, 1].replace([], [2], 2) returns [2, 1, 2, 1, 1]
+  /// [].replace([], [1]) returns [1]
+  List<E> replace(Iterable<E> from, [Iterable<E> to = const [], int? count]) {
+    return h.replaceCountList(this, from, to, count);
   }
 
   /// Removes elements that don't meet criteria.
@@ -358,6 +386,73 @@ extension HeartIterableE<E> on Iterable<E> {
   List<E> riffleOut() {
     return h.riffleOutList(this);
   }
+
+  /// Returns everything after a given sublist:
+  /// [1, 2, 3].after([1]) returns [2, 3]
+  /// [1, 2, 3].after([1, 2]) returns [3]
+  /// [1, 2, 3].after([]) returns [1, 2, 3]
+  ///
+  /// /// Works for nested iterables:
+  /// [{1: 2}, {3: 4}].after([{1: 2}]) returns [{3: 4}]
+  ///
+  /// Optional [skip] skips that many occurrences:
+  /// [1, 2, 1, 2, 3].after([1], skip: 1) returns [2, 3]
+  ///
+  /// Returns null if [sublist] is not present, unless [skip] is negative:
+  /// [1, 2, 3].after([100]) returns null
+  /// Negative [skip] returns original:
+  /// [1, 2, 3].after([100], skip: -1) returns [1, 2, 3]
+  ///
+  /// Empty sublist returns everything after
+  /// the first [skip] elements:
+  /// [1, 1, 1].after([], skip: 2) returns [1]
+  /// [1, 1, 1].after([], skip: 3) returns []
+  ///
+  /// Returns null if all occurrences are skipped:
+  /// [1, 2, 3, 3].after([3], skip: 2) returns null
+  /// [1, 1, 1].after([], skip: 4) returns null
+  List<E>? after(Iterable<E> sublist, {int skip = 0}) {
+    return h.afterList(this, sublist, skip);
+  }
+
+  /// Returns everything before a given sublist:
+  /// [1, 2, 3, 3].before([3]) returns [1, 2]
+  /// [1, 2, 3, 3].before([3, 3]) returns [1, 2]
+  /// [1, 2, 3, 3].before([1]) returns []
+  /// [1, 2, 3, 3].before([]) returns []
+  ///
+  /// Works for nested iterables:
+  /// [{1: 2}, {3: 4}].before([{3: 4}]) returns [{1: 2}]
+  ///
+  /// Optional [skip] skips that many occurrences:
+  /// [1, 2, 3, 3].before([3], skip: 1) returns [1, 2, 3]
+  ///
+  /// Returns null if [sublist] is not present, unless [skip] is negative:
+  /// [1, 2, 3].before([5, 6]) returns null
+  /// Negative [skip] returns empty:
+  /// [1, 2, 3].before([5, 6], skip: -1) returns []
+  ///
+  /// Returns first [skip] elements when sublist is empty:
+  /// [1, 2, 3, 4].before([], skip: 4) returns [1, 2, 3, 4]
+  ///
+  /// Returns null if all occurrences are skipped:
+  /// [1, 2, 3, 3].before([3], skip: 2) returns null
+  /// [1, 2, 3, 4].before([], skip: 5) returns null
+  List<E>? before(Iterable<E> sublist, {int skip = 0}) {
+    return h.beforeList(this, sublist, skip);
+  }
+
+  /// Equivalent to Dart's .startsWith for String
+  /// [1, 2, 3].startsWith([1]) returns true
+  /// [1, 2, 3].startsWith([1, 2]) returns true
+  /// [1, 2, 3].startsWith([3]) returns false
+  ///
+  /// Empty [sublist] returns true the same way
+  /// .startsWith('') returns true for String:
+  /// [1, 2, 3].startsWith([]) returns true
+  bool startsWith(Iterable<E> sublist) {
+    return h.startsWithList(this, sublist);
+  }
 }
 
 /// Extension methods that maintain types for nested iterables.
@@ -367,8 +462,8 @@ extension HeartIterableIterable<E> on Iterable<Iterable<E>> {
   ///
   /// [[1, 2], [3, 4], [5, 6]].intercalate([0, 0])
   /// returns [1, 2, 0, 0, 3, 4, 0, 0, 5, 6].
-  List<E> intercalate(Iterable<E> input) {
-    return h.intercalateList(input, this);
+  List<E> intercalate(Iterable<E> input, {int? count}) {
+    return h.intercalateList(input, this, count);
   }
 
   /// Concatenate nested iterables.
@@ -483,8 +578,12 @@ extension HeartIterableString on Iterable<String> {
   ///
   /// ['one', 'two', 'three'].intercalate('-')
   /// returns 'one-two-three'.
-  String intercalate(String s) {
-    return h.intercalateString(s, this);
+  ///
+  /// Optional [count] parameter only adds that many times:
+  /// ['one', 'two', 'three'].intercalate('-', count: 1)
+  /// returns 'one-twothree'
+  String intercalate(String s, {int? count}) {
+    return h.intercalateString(s, this, count);
   }
 
   /// Combines Strings into one.
@@ -567,7 +666,7 @@ extension HeartString on String {
   /// Accented letters don't count as symbols.
   ///
   /// Empty String returns false if ignoreSymbols is false.
-  bool isUpperCase({ignoreSymbols = true}) {
+  bool isUpperCase({bool ignoreSymbols = true}) {
     return h.isUpperCase(this, ignoreSymbols);
   }
 
@@ -794,8 +893,22 @@ extension HeartString on String {
   /// 'hellllo'.elemIndices('ll') returns [2, 3, 4].
   ///
   /// 'hello'.elemIndices('a') returns [].
+  @Deprecated("Use 'indices' instead.")
   List<int> elemIndices(String substring) {
     return h.elemIndicesString(substring, this);
+  }
+
+  /// Returns a List of all occurrences of [substring].
+  ///
+  /// 'hello'.indices('l') returns [2, 3].
+  ///
+  /// 'hello'.indices('ll') returns [2].
+  ///
+  /// 'hellllo'.indices('ll') returns [2, 3, 4].
+  ///
+  /// 'hello'.indices('a') returns [].
+  List<int> indices(String substring, {bool exclusive = false}) {
+    return h.indicesString(this, substring, exclusive: exclusive);
   }
 
   /// Drops first n characters.
@@ -971,6 +1084,49 @@ extension HeartString on String {
   bool operator <=(String s) {
     return this == s || h.lessThanString(this, s);
   }
+
+  /// Returns all the characters after a given substring.
+  /// 'abc'.after('a') returns 'bc'
+  /// 'abc'.after('ab') returns 'c'
+  /// 'abc'.after('') returns 'abc'
+  /// 'abc'.after('x') returns ''
+  String? after(String substring, {int skip = 0}) {
+    return h.afterString(this, substring, skip);
+  }
+
+  /// Returns all the characters before the first occurrence of a substring.
+  /// 'abcc'.before('c') returns 'ab'
+  /// 'abcc'.before('cc') returns 'ab'
+  ///
+  /// Returns full string if [substring] is not present:
+  /// 'abcc'.before('x') returns 'abcc'
+  ///
+  /// Returns empty string if [substring] is empty:
+  /// 'abcc'.before('') returns ''
+  String? before(String substring, {int skip = 0}) {
+    return h.beforeString(this, substring, skip);
+  }
+
+  /// Alternative to [replaceFirst] and [replaceAll]
+  /// '111'.replace('1', '3') returns '333', same as '111'.replaceAll('1', '3')
+  /// '1111'.replace('11', '3') returns '33'
+  ///
+  /// Optional [count] replaces that many occurrences:
+  /// '111'.replace('1', '3', 1) returns '311', same as '111'.replaceFirst('1', '3')
+  /// '111'.replace('1', '', 1) returns '11'
+  ///
+  /// High [count] does not add more characters:
+  /// '111'.replace('1', '2', 100) returns '222'
+  /// Negative [count] returns the same String:
+  /// '111'.replace('1', '2', -100) returns '111'
+  ///
+  /// Replacing empty String inserts substring before and after each character:
+  /// '111'.replace('', '2') returns '2121212'
+  /// '111'.replace('', '2', 2) returns '21211'
+  /// ''.replace('', '1') returns '1'
+  String replace(String from, [String to = '', int? count]) {
+    return h.replaceCountString(this, from, to, count);
+  }
 }
 
 /// Extension methods for integers
@@ -1079,18 +1235,6 @@ bool deepEquals(var a, var b) {
   return h.deepEquals(a, b);
 }
 
-/// Checks for equality for nested iterables, Strings, and numbers.
-///
-/// By default, [1, 2] == [1, 2] returns false.
-/// Dart's separate listEquals doesn't work for
-/// nested lists.
-///
-/// bigEquals([[1,2], {3,4}], [[1,2], {3,4}]) returns true.
-@Deprecated('Use \'deepEquals\' instead.')
-bool bigEquals(var a, var b) {
-  return h.bigEquals(a, b);
-}
-
 /// Takes in iterables, returns a list of lists where
 /// corresponding elements are paired together.
 ///
@@ -1140,5 +1284,3 @@ List zip4<T>(Iterable<Iterable<T>> it,
     dynamic Function(T a, T b, T c, T d) zipFunction) {
   return h.zip4(it, zipFunction);
 }
-
-//TODO: rank character occurrences; option to remove symbols in words() and letters(); look in shufflez scratch

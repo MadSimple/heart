@@ -2,10 +2,9 @@
 /// See heart.dart for more extensive documentation.
 library;
 
-import 'dart:collection';
-import 'dart:math';
+import 'dart:math' show min, Random;
 
-import 'package:collection/collection.dart';
+import 'package:collection/collection.dart' show DeepCollectionEquality;
 
 /// Increment or decrement Strings, used for ^ operator.
 String incrementString(String s, int n) {
@@ -21,43 +20,42 @@ String incrementString(String s, int n) {
 }
 
 /// Insert a String between other Strings and concatenate.
-String intercalateString(String s, Iterable<String> l) {
-  if (l.isEmpty) {
-    return '';
-  } else if (s.isEmpty) {
-    return concatStrings(l);
+String intercalateString(String sub, Iterable<String> original, [int? count]) {
+  List<List<int>> originalCopy = [];
+  for (String s in original) {
+    originalCopy.add(s.codeUnits);
   }
-  String result = '';
-  List<String> copy = List.from(l);
-  copy.removeLast();
-  for (var v in copy) {
-    result += (v + s);
-  }
-  result += l.last;
-  return result;
+
+  List<int> subCopy = sub.codeUnits;
+
+  return chrs(intercalateList(subCopy, originalCopy, count));
 }
 
 /// Insert element between other elements and concatenate.
-List<T> intercalateList<T>(Iterable<T> sub, Iterable<Iterable<T>> it) {
-  List<List<T>> original = [];
-  for (var v in it) {
-    original.add(List.from(v));
+List<T> intercalateList<T>(Iterable<T> sub, Iterable<Iterable<T>> original,
+    [int? count]) {
+  if (original.length <= 1 || sub.isEmpty || (count != null && count <= 0)) {
+    return concatLists(original);
   }
 
-  if (original.isEmpty) {
-    return [];
+  List<List<T>> originalLists = [];
+  for (var v in original) {
+    originalLists.add(List.from(v));
   }
-  if (original.length == 1) {
-    return original.first;
-  }
+  List<T> subCopy = List.from(sub);
 
-  List<T> input = List.from(sub);
-
+  int maxOccurrences =
+      min(count ?? originalLists.length - 1, originalLists.length - 1);
   List<T> result = [];
-  for (int i in range(original.length - 1)) {
-    result = result + original[i] + input;
+  while (maxOccurrences > 0) {
+    result += originalLists.first + subCopy;
+    originalLists.removeAt(0);
+    maxOccurrences--;
   }
-  result += original.last;
+
+  for (List<T> remaining in originalLists) {
+    result += remaining;
+  }
 
   return result;
 }
@@ -75,7 +73,7 @@ int countList<T>(Iterable<T> it, T element) {
 
 /// Count number of occurrences in a String.
 int countString(String sub, String original) {
-  return elemIndicesString(sub, original).length;
+  return indicesString(original, sub).length;
 }
 
 /// Split a String into a List of characters.
@@ -142,7 +140,7 @@ T? headList<T>(Iterable<T> it) {
 
 /// Returns first character.
 String? headString(String s) {
-  if (s == '') {
+  if (s.isEmpty) {
     return null;
   }
   return s.substring(0, 1);
@@ -1167,13 +1165,14 @@ List<T> listSubtractAll<T>(Iterable<T> original, Iterable<T> sublist) {
 }
 
 /// List of every index of [sub] in [original]
+@Deprecated("Use 'indicesString'")
 List<int> elemIndicesString(String sub, String original) {
   if (sub.isEmpty || original.isEmpty) {
     return [];
   }
   List<int> result = [];
 
-  for (int i = 0; i < original.length; i++) {
+  for (int i in range(original.length)) {
     if (original.substring(i).startsWith(sub)) {
       result.add(i);
     }
@@ -1182,14 +1181,50 @@ List<int> elemIndicesString(String sub, String original) {
   return result;
 }
 
-/// List of every index of [element] in [it]
-List<int> elemIndicesList<T>(T element, Iterable<T> it) {
-  List<int> result = [];
-  List<T> l = List.from(it);
+/// List of every index of [sub] in [original]
+List<int> indicesString(String original, String sub, {bool exclusive = false}) {
+  return indicesList(original.codeUnits, sub.codeUnits, exclusive: exclusive);
+}
 
-  for (int i = 0; i < l.length; i++) {
-    if (deepEquals(l[i], element)) {
+/// List of every index of [element] in [original]
+@Deprecated("Use 'indicesList'")
+List<int> elemIndicesList<T>(T element, Iterable<T> original) {
+  List<T> originalCopy = List.from(original);
+  List<int> result = [];
+
+  for (int i = 0; i < originalCopy.length; i++) {
+    if (deepEquals(originalCopy[i], element)) {
       result.add(i);
+    }
+  }
+
+  return result;
+}
+
+/// Find occurrences of a sublist in a list.
+/// 'elemIndicesList' checks for individual elements and not a sublist.
+List<int> indicesList<T>(Iterable<T> original, Iterable<T> sublist,
+    {bool exclusive = false}) {
+  if (sublist.isEmpty) {
+    return inclusive(original.length);
+  } else if (original.isEmpty) {
+    return [];
+  }
+
+  List<T> originalCopy = List.from(original);
+  List<T> subCopy = List.from(sublist);
+
+  int maxIndex = originalCopy.length - subCopy.length;
+
+  List<int> result = [];
+
+  int currentIndex = 0;
+  while (currentIndex <= maxIndex) {
+    if (startsWithList(originalCopy.sublist(currentIndex), subCopy)) {
+      result.add(currentIndex);
+      currentIndex += exclusive ? subCopy.length : 1;
+    } else {
+      currentIndex++;
     }
   }
 
@@ -1200,7 +1235,7 @@ List<int> elemIndicesList<T>(T element, Iterable<T> it) {
 List<T> insertInOrder<T>(T n, Iterable<T> it) {
   List<T> l = List.from(it);
   List<T> result = List.from(l);
-  for (int i = 0; i < l.length; i++) {
+  for (int i in range(l.length)) {
     if ((l[i] as num) >= (n as num)) {
       result.insert(i, n);
       return result;
@@ -1279,120 +1314,6 @@ bool deepContains(Iterable l, var v) {
   return false;
 }
 
-/// Check for equality of multiple data types
-@Deprecated("Use 'deepEquals' instead.")
-bool bigEquals(var a, var b) {
-  bool listEquals<T>(List<T>? a, List<T>? b) {
-    if (a == null) {
-      return b == null;
-    }
-    if (b == null || a.length != b.length) {
-      return false;
-    }
-    if (identical(a, b)) {
-      return true;
-    }
-    for (int index = 0; index < a.length; index += 1) {
-      if (!bigEquals(a[index], b[index])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool mapEquals<T, U>(Map<T, U>? a, Map<T, U>? b) {
-    //using brackets only works for primitive types
-    getMapValue(Map m, var key) {
-      List keyList = m.keys.toList();
-      List valueList = m.values.toList();
-      for (int i = 0; i < keyList.length; i++) {
-        if (bigEquals(keyList[i], key)) {
-          return valueList[i];
-        }
-      }
-      return null;
-    }
-
-    if (a == null) {
-      return b == null;
-    }
-    if (b == null || a.length != b.length) {
-      return false;
-    }
-    if (identical(a, b)) {
-      return true;
-    }
-    for (final T key in a.keys.toList()) {
-      if (!bigContains(b.keys.toList(), key) ||
-          !bigEquals(getMapValue(b, key), getMapValue(a, key))) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool setEquals<T>(Set<T>? a, Set<T>? b) {
-    if (a == null) {
-      return b == null;
-    }
-    if (b == null || a.length != b.length) {
-      return false;
-    }
-    if (identical(a, b)) {
-      return true;
-    }
-    for (var value1 in a) {
-      int count = 0;
-      for (var value2 in b) {
-        if (bigEquals(value1, value2)) {
-          count++;
-        }
-      }
-      if (count != 1) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  try {
-    if (a is List && b is List) {
-      return listEquals(a, b);
-    }
-    if (a is Map && b is Map) {
-      return mapEquals(a, b);
-    }
-    if (a is Set && b is Set) {
-      return setEquals(a, b);
-    }
-    if (a is Queue && b is Queue) {
-      return listEquals(a.toList(), b.toList());
-    }
-    if (a is Iterable && b is Iterable) {
-      if (a.runtimeType != b.runtimeType) {
-        return false;
-      }
-      return listEquals(a.toList(), b.toList());
-    }
-
-    return a == b;
-  } catch (e) {
-    return false;
-  }
-}
-
-/// Checks if iterable contains element with [bigEquals]
-@Deprecated("Use 'deepContains' instead.")
-bool bigContains(Iterable l, var v) {
-  for (var item in l) {
-    if (bigEquals(v, item)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 /// Combine list elements into pairs
 List<List<T>> zipList<T>(Iterable<Iterable<T>> it) {
   List<List<T>> result = [];
@@ -1464,4 +1385,145 @@ zip4<T>(Iterable<Iterable<T>> it,
   }
 
   return result;
+}
+
+/// Get all the characters after a given substring
+String? afterString(String original, String sub, [int skip = 0]) {
+  List<int>? listResult = afterList(original.codeUnits, sub.codeUnits, skip);
+  return listResult == null ? null : chrs(listResult);
+}
+
+/// Return elements after a given sublist
+List<T>? afterList<T>(Iterable<T> original, Iterable<T> sub, [int skip = 0]) {
+  List<T> originalCopy = List.from(original);
+  List<T> subCopy = List.from(sub);
+
+  if (skip < 0) {
+    return originalCopy;
+  }
+
+  int maxOccurrences = originalCopy.length - subCopy.length + 1;
+  if ((original.isEmpty && sub.isNotEmpty) || skip >= maxOccurrences) {
+    return null;
+  }
+
+  if (sub.isEmpty) {
+    return originalCopy.sublist(skip);
+  }
+
+  // indicesList doesn't work with empty sublist, but startsWithList does
+  List<int> subIndices = [];
+  for (int i in range(maxOccurrences)) {
+    if (startsWithList(originalCopy.sublist(i), subCopy)) {
+      subIndices.add(i);
+    }
+  }
+
+  if (skip >= subIndices.length) {
+    return null;
+  }
+
+  subIndices = dropList(skip, subIndices);
+  int startIndex = subIndices.first + sub.length;
+  return originalCopy.sublist(startIndex);
+}
+
+/// Get all the characters before a substring
+String? beforeString(String original, String sub, [int skip = 0]) {
+  List<int>? listResult = beforeList(original.codeUnits, sub.codeUnits, skip);
+  return listResult == null ? null : chrs(listResult);
+}
+
+/// Return elements before a given sublist
+List<T>? beforeList<T>(Iterable<T> original, Iterable<T> sub, [int skip = 0]) {
+  if (skip < 0) {
+    return [];
+  }
+  if (original.isEmpty && sub.isNotEmpty) {
+    return null;
+  }
+
+  List<T> originalCopy = List.from(original);
+  List<T> subCopy = List.from(sub);
+  List<int> subIndices = [];
+  int maxOccurrences = originalCopy.length - subCopy.length + 1;
+
+  // indicesList doesn't work with empty sublist, but startsWithList does
+  for (int i in range(maxOccurrences)) {
+    if (startsWithList(originalCopy.sublist(i), subCopy)) {
+      subIndices.add(i);
+    }
+  }
+
+  if (skip >= subIndices.length) {
+    return null;
+  }
+
+  subIndices = dropList(skip, subIndices);
+  return originalCopy.sublist(0, subIndices.first);
+}
+
+/// Equivalent to String .startsWith
+bool startsWithList(Iterable original, Iterable sub) {
+  if (sub.length > original.length) {
+    return false;
+  }
+  return sub.isEmpty ||
+      deepEquals(List.from(original).sublist(0, sub.length), List.from(sub));
+}
+
+/// Convert each element to List
+List<List<T>> toLists<T>(Iterable<T> it) {
+  List<List<T>> result = [];
+
+  for (T element in it) {
+    result.add([element]);
+  }
+
+  return result;
+}
+
+/// Replace one sublist with another, any or all occurrences.
+List<T> replaceCountList<T>(Iterable<T> original, Iterable<T> from,
+    [Iterable<T> to = const [], int? count]) {
+  List<T> originalCopy = List.from(original);
+  List<T> fromCopy = List.from(from);
+  List<T> toCopy = List.from(to);
+  if (count != null && count <= 0) {
+    return originalCopy;
+  }
+
+  List<int> replaceIndices =
+      indicesList(originalCopy, fromCopy, exclusive: true);
+
+  if (replaceIndices.isEmpty) {
+    return originalCopy;
+  }
+
+  if (count != null) {
+    replaceIndices =
+        replaceIndices.sublist(0, min(count, replaceIndices.length));
+  }
+
+  List<T> result = originalCopy.sublist(0, replaceIndices.first);
+  for (int i in range(replaceIndices.length)) {
+    if (i == replaceIndices.length - 1) {
+      result += toCopy +
+          originalCopy.sublist(
+              replaceIndices[i] + fromCopy.length, originalCopy.length);
+    } else {
+      result += toCopy +
+          originalCopy.sublist(
+              replaceIndices[i] + fromCopy.length, replaceIndices[i + 1]);
+    }
+  }
+
+  return result;
+}
+
+/// Replace a substring with another, any or all occurrences
+String replaceCountString(String original, String from,
+    [String to = '', int? count]) {
+  return chrs(replaceCountList(
+      original.codeUnits, from.codeUnits, to.codeUnits, count));
 }

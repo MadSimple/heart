@@ -3,14 +3,14 @@
 
 Extension methods for strings and lists, inspired by Haskell.
 ###
-Alphabetical list of features: [any](#any-every), [ascending](#ascending-descending), [average](#sum-product-average),
-[backwards](#backwards),
+Alphabetical list of features: [after](#before-after), [any](#any-every), [ascending](#ascending-descending), [average](#sum-product-average),
+[backwards](#backwards), [before](#before-after),
 [chr](#chr-chrs), [chrs](#chr-chrs), [concat](#concat),
-[count](#count), [deepContains](#deepcontains), [deepEquals](#deepequals),
+[count](#count), [deepContains](#deepequals-deepcontains), [deepEquals](#deepequals-deepcontains),
 [descending](#ascending-descending),
-[drop](#drop-dropwhile), [dropWhile](#drop-dropwhile), [elemIndices](#elemindices), [every](#any-every),
+[drop](#drop-dropwhile), [dropWhile](#drop-dropwhile), [every](#any-every),
 [filter](#filter), [group](#group-groupby), [groupBy](#group-groupby),
-[head](#head-tails-last-inits), [inclusive](#range-inclusive), [inclusiveString](#rangestring-inclusivestring), 
+[head](#head-tails-last-inits), [inclusive](#range-inclusive), [inclusiveString](#rangestring-inclusivestring), [indices](#indices),
 [inits](#head-tails-last-inits), [insertInOrder](#insertinorder),
 [intercalate](#intercalate-in-ter-kuh-late), [interleave](#interleave), [intersect](#union-intersect), [intersperse](#intersperse),
 [isLowerCase](#isuppercase-islowercase), [isUpperCase](#isuppercase-islowercase),
@@ -18,19 +18,53 @@ Alphabetical list of features: [any](#any-every), [ascending](#ascending-descend
 [letters](#words-wordcount-letters-lettercount),
 [nub](#nub), [product](#sum-product-average), [range](#range-inclusive), [rangeString](#rangestring-inclusivestring),
  [removeWhitespace](#removewhitespace),
-[replaceAll](#replacefirst-replaceall), [replaceFirst](#replacefirst-replaceall),
-[riffleIn](#rifflein-riffleout), [riffleOut](#rifflein-riffleout), [shuffled](#shuffled), [splitAt](#splitat),
+[replace](#replace), [riffleIn](#rifflein-riffleout), [riffleOut](#rifflein-riffleout), [shuffled](#shuffled), [splitAt](#splitat), [startsWith](#startswith),
 [subtract](#subtract-subtractall), [subtractAll](#subtract-subtractall), [sum](#sum-product-average),
 [tail](#head-tails-last-inits), [tails](#head-tails-last-inits), [toStringList](#tostringlist),
 [union](#union-intersect), [unwords](#unwords), [wordCount](#words-wordcount-letters-lettercount),
 [words](#words-wordcount-letters-lettercount),
 [zip](#zip-zip2), [zip2](#zip-zip2), [zip3](#zip-zip2), [zip4](#zip-zip2), [>, >=, <, <=, ^, *](#operators-for-strings-and-lists)
 
-###
 
 #### (Strings are treated as lists in Haskell, and have many of the same functions.)
 
-### ascending, descending
+#### deepEquals, deepContains
+
+```deepEquals``` and the rest of the package uses Dart's ```DeepCollectionEquality``` whenever posssible .
+
+```deepEquals``` can check equality for nested lists, sets, and maps.
+
+By default, Dart doesn't compare elements in a list for equality.
+
+```dart
+[1, 2] == [1, 2] // false
+```
+
+Use ```deepEquals``` for this and other iterables:
+
+```dart
+bool a = deepEquals([1, 2], [1, 2]); // true
+bool b = deepEquals(
+    {1: 2, 3: [4,5]},
+    {3: inclusive(4, 5), 1: 2}
+); // true
+bool c = deepEquals(1, 1); // true
+```
+
+```deepContains``` uses ```deepEquals``` to check if an iterable contains an element:
+
+```dart
+List l = [[1, 2], {3: 4}];
+Map m = {3: 4};
+
+// By default:
+bool b = l.contains(m); // false
+
+bool b2 = l.deepContains(m); // true
+```
+
+
+## ascending, descending
 Sort lists and strings:
 ```dart
 List<int> l = [4, 5, 1, 2, 3].ascending(); // [1, 2, 3, 4, 5]
@@ -40,40 +74,30 @@ String s = 'hello'.ascending(); // 'ehllo'
 String s = 'hello'.descending(); // 'ollhe'
 ```
 
-### sum, product, average
-Add or multiply numbers in a list:
+## before, after
+Get everything before or after a sublist:
 ```dart
-int s = [1, 2, 3].sum(); // 6
-int p = [4, 5, 6].product(); // 120
-double a = [11, 2, 33, 55, 7, 2, 1].average(); // 15.857142857142858
+List<int>? l = [1, 2, 3, 3].before([3]); // [1, 2]
+[1, 2, 3, 3].before([2, 3]) // [1]
 
-// .average() works for Strings based on character codes
-'abc'.average() // 'b'
+[1, 2, 3, 3].after([2, 3]) // [3]
+```
+Optional skip parameter skips that many occurrences:
+```dart
+[1, 2, 3, 3].before([3], skip: 1) // [1, 2, 3]
+[1, 2, 3, 3].after([3], skip: 1) // []
+```
+Returns null if doesn't contain sublist:
+```dart
+[1, 2, 3, 3].before([4, 5]) // null
 ```
 
-### count
-Count occurrences in a list or string:
+## startsWith
+Dart already has this for strings:
 ```dart
-int c = [1, 2, 1, 3].count(1); // 2
-
-// Works for nested iterables
-[{1,2}, [1,3]].count({1,2}) // 1
-
-'hello world'.count('l') // 3
-'hello world'.count('ll') // 1
+bool b = [1, 2, 3].startsWith([1, 2]); // true
 ```
-
-### elemIndices
-Find where element occurs in a list, or substring occurs in a string:
-```dart
-List<int> l = [1, 2, 1, 2, 1].elemIndices(1); // [0, 2, 4]
-// Works on nested iterables by using deepEquals function in this package
-List<int> l2 = [[1,2], [1,2], [3,4]].elemIndices([1,2]); // [0, 1]
-List<int> l3 = 'hello'.elemIndices('l'); // [2, 3]
-List<int> l4 = 'hello'.elemIndices('ll'); // [2]
-```
-
-### nub
+## nub
 Remove duplicates:
 ```dart
 List<int> l = [1, 2, 1, 2].nub() // [1, 2]
@@ -85,14 +109,14 @@ Optional list or string parameter only looks at those elements:
 'aaabbbcc'.nub('ab') // 'abcc'
 ```
 
-### backwards
+## backwards
 Reverse a string or list:
 ```dart
 List<int> l = [1, 2, 3].backwards(); // [3, 2, 1]
 String s = 'hello'.backwards(); // 'olleh'
 ```
 
-### shuffled
+## shuffled
 Returns a shuffled list or string, with cryptographically secure option.
 (Dart's ```shuffle``` method is void)
 
@@ -104,22 +128,64 @@ List<int> l = [1, 2, 3, 4, 5].shuffled(cryptographicallySecure: true);
 String s = 'hello'.shuffled();
 ```
 
+## sum, product, average
+Add or multiply numbers in a list:
+```dart
+int s = [1, 2, 3].sum(); // 6
+int p = [4, 5, 6].product(); // 120
+double a = [11, 2, 33, 55, 7, 2, 1].average(); // 15.857142857142858
 
-### concat
+// .average() works for Strings based on character codes
+'abc'.average() // 'b'
+```
+
+## count
+Count occurrences in a list or string:
+```dart
+int c = [1, 2, 1, 3].count(1); // 2
+// Note: '.indices([1]).length' gives same result, and can be used for sublists instead of one element
+
+// Works for nested iterables
+[{1,2}, [1,3]].count({1,2}) // 1
+
+'hello world'.count('l') // 3
+'hello world'.count('ll') // 1
+```
+
+## indices
+Find where sublist occurs in a list, or substring occurs in a string:
+```dart
+List<int> l = [1, 2, 1, 2, 1].indices([1]); // [0, 2, 4]
+[1, 2, 1, 2, 1].indices([1, 2]) // [0, 2]
+'hello'.indices('ll') // [2]
+// Works on nested iterables by using deepEquals function in this package
+[[1,2], [1,2], {3: 4}].indices([[1, 2], {3: 4}]) // [1]
+```
+Optional ```exclusive``` parameter means the sublists at each index would be mutually exclusive:
+```dart
+[1, 1, 1, 1].indices([1, 1]) // [0, 1, 2]
+[1, 1, 1, 1].indices([1, 1], exclusive: true) // [0, 2]
+'aaaa'.indices('aa', exclusive: true) // [0, 2]
+```
+
+## concat
 Concatenate nested lists or strings:
 ```dart
 List<int> l = [[1, 2], [3, 4], [5, 6]].concat(); // [1, 2, 3, 4, 5, 6]
 String str = ['hello', 'world'].concat(); // 'helloworld'
 ```
 
-### intersperse
+## intersperse
 Inserts an item in between all other elements:
 ```dart
 List<int> l = [1, 2, 3].intersperse(0); // [1, 0, 2, 0, 3]
 String s = 'hello'.intersperse('-'); // 'h-e-l-l-o'
+// Note: 'replace' method with empty list or string adds element to beginning and end
+'hello'.replace('', '-') // '-h-e-l-l-o-'
+
 ```
 
-### intercalate (in-TER-kuh-late)
+## intercalate (in-TER-kuh-late)
 
 Inserts a list between lists (or string between strings) and concatenates the result:
 ```dart
@@ -129,8 +195,12 @@ List<int> l = [[1, 2], [3, 4], [5, 6]].intercalate([0, 0]);
 String s = ['hello', 'world'].intercalate('-');
 // 'hello-world'
 ```
+Optional ```count``` parameter only adds that many times:
+```dart
+[[1, 2], [3, 4], [5, 6]].intercalate([0, 0], count: 1) // [1, 2, 0, 0, 3, 4, 5, 6]
+```
 
-### filter
+## filter
 Keep only elements that meet criteria:
 ```dart
 // Keep where x^3 < 10:
@@ -142,13 +212,13 @@ Equivalent to ```.where().toList()```, but also works on Strings:
 String s = 'hello world'.filter((char) => char < 'j'); // 'he d'
 ```
 
-### any, every
+## any, every
 (These already exist for lists)
 ```dart
 bool b = 'hello'.any((char) => char == 'h'); // true
 bool b2 = 'hello'.every((char) => char == 'h'); // false
 ```
-### drop, dropWhile
+## drop, dropWhile
 ```drop(n)``` removes first n elements. Similar to ```.sublist(n)``` or ```.substring(n)``` but doesn't throw exception for invalid n.
 ```dart
 List<int> l = [0, 1, 2].drop(1); // [1, 2]
@@ -171,26 +241,21 @@ String s = 'hello'.dropWhile((char) => char < 'i');
 // 'llo'
 ```
 
-### replaceFirst, replaceAll
-(These methods already exist for Strings)
-
+## replace
+Remove all occurrences or replace with a particular sublist:
 ```dart
-List<int> l = [1, 1, 2, 3].replaceFirst(1, 99); // [99, 1, 2, 3]
+List<int> l = [1, 1, 2, 3].replace([1]); // [2, 3]
+[1, 1, 2, 3].replace([1, 1], [99]) // [99, 2, 3]
 
-// Can replace with multiple elements:
-List<int> l2 = [1, 1, 2, 3].replaceFirst(1, [99,100]); // [99, 100, 1, 2, 3]
-
-// No replacement value means it will simply delete:
-List<int> l3 = [1, 1, 2, 3].replaceFirst(1); // [1, 2, 3]
+'aaaa'.replace('a', 'b') // 'bbbb'
+```
+Optional third parameter only replaces that many occurrences:
+```dart
+[1, 1, 1, 1].replace([1], [3, 4], 2) // [3, 4, 3, 4, 1, 1]
+'aaaa'.replace('a', 'bc', 2) // 'bcbcaa'
 ```
 
-```dart
-List<int> l = [1, 1, 2, 3].replaceAll(1, 99); // [99, 99, 2, 3]
-List<int> l2 = [1, 1, 2, 3].replaceAll(1, [99,100]); // [99, 100, 99, 100, 2, 3]
-List<int> l3 = [1, 1, 2, 3].replaceAll(1); // [2, 3]
-```
-
-###  subtract, subtractAll
+##  subtract, subtractAll
 ```subtract``` removes elements one at a time (like Haskell's \\\\):
 ```dart
 List<int> l = [1, 1, 2, 2, 3].subtract([1, 3]); // [1, 2, 2]
@@ -205,7 +270,7 @@ String s = 'hello'.subtract('eo'); // 'hll'
 List<int> l = [1, 1, 2, 2].subtractAll([1]); // [2, 2]
 String s = 'hello'.subtractAll('lo'); // 'he'
 ```
-### union, intersect
+## union, intersect
 ```union``` adds elements that aren't already present.
 
 It doesn't remove duplicates from original, but doesn't add duplicates from input.
@@ -224,7 +289,7 @@ String s = 'hello'.intersect('world'); // 'llo'
 ```
 
 
-### head, tail(s), last, inits,
+## head, tail(s), last, inits,
 ```head``` returns first element.
 
 ```tail``` returns everything but the first element.
@@ -262,7 +327,7 @@ List<List<int>> twelveDaysOfChristmas = inclusive(12, 1).tails().backwards();
 'hello'.tails()
 // ['hello', 'ello', 'llo', 'lo', 'o', '']
 ```
-### insertInOrder
+## insertInOrder
 Inserts a value before the first element that is >=. Does not sort.
 ```dart
 List<double> l2 = [1.1, 2.2, 0.2].insertInOrder(1.7);
@@ -271,7 +336,7 @@ List<double> l2 = [1.1, 2.2, 0.2].insertInOrder(1.7);
 String s = 'ABDKEO'.insertInOrder('J'); // 'ABDJKEO'
 
 ```
-### splitAt
+## splitAt
 Split a list or string into two:
 ```dart
 List<List<int>> l = [5, 6, 7, 8].splitAt(2); // [[5, 6], [7, 8]]
@@ -279,7 +344,7 @@ List<List<int>> l = [5, 6, 7, 8].splitAt(2); // [[5, 6], [7, 8]]
 'hello'.splitAt(2) // ['he', 'llo'] 
 ```
 
-### interleave
+## interleave
 Combine two lists or strings by taking turns:
 ```dart 
 List<int> l = [1, 2, 3].interleave([4, 5, 6]);
@@ -294,7 +359,7 @@ Extra characters get added to the end:
 // [1, 5, 2, 3, 4]
 ```
 
-### riffleIn, riffleOut
+## riffleIn, riffleOut
 Riffle shuffle: splits list or string in half and interleaves them
 
 ![image](https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Faro_shuffles.svg/250px-Faro_shuffles.svg.png)
@@ -312,7 +377,7 @@ String s = '12345'.riffleOut();
 String s2 = '12345'.riffleIn();
 // '31425'
 ```
-### group, groupBy
+## group, groupBy
 ```group``` combines consecutive elements together if they are equal:
 ```dart
 List<List<int>> l = [1, 2, 3, 3, 1].group();
@@ -334,7 +399,7 @@ List<String> ls = 'HelLo'.groupBy((a, b) => a.isUpperCase() && b.isLowerCase());
 ```
 
 
-### chr, chrs
+## chr, chrs
 
 ```chr``` returns a String from a character code.
 
@@ -356,14 +421,14 @@ List<String> ls = 'HelLo'.groupBy((a, b) => a.isUpperCase() && b.isLowerCase());
 
 
 
-### toStringList
+## toStringList
 Convert all elements to strings:
 ```dart
 List<String> l = [1, 2, 3].toStringList(); // ['1', '2', '3']
 ```
 
 
-### zip, zip2
+## zip, zip2
 ```zip``` takes in a list of lists, returns a list of lists where corresponding elements are paired together.
 ```dart
 List l = zip([['one','two','three'], [1,2,3]]);
@@ -386,7 +451,7 @@ List l = zip2([[1,2,3],[4,5,6]], (a,b) => a+b); // [5, 7, 9]
 
 
 
-### removeWhitespace
+## removeWhitespace
 ```dart
 String s = '  hello \n world  '.removeWhitespace(); // 'helloworld'
 
@@ -394,7 +459,7 @@ String s = '  hello \n world  '.removeWhitespace(); // 'helloworld'
 ```
 
 
-### words, wordCount, letters, letterCount
+## words, wordCount, letters, letterCount
 ```words``` returns a list of words without whitespace.
 
 ```wordCount``` takes the length of this List. Equivalent to ```words().length```.
@@ -422,14 +487,14 @@ int lc = 'hello world'.letterCount();
 // 11 (same as .length)
 ```
 
-### unwords
+## unwords
 Combine a list of strings into one, with spaces in between:
 ```dart
 String s = ['hello', 'world'].unwords(); // 'hello world'
 String s2 = 'hello world'.letters().unwords(); 'h e l l o w o r l d'
 ```
 
-### isUpperCase, isLowerCase
+## isUpperCase, isLowerCase
 Checks if all characters are upper or lower case, with optional ```ignoreSymbols``` parameter.
 
 ```dart
@@ -454,7 +519,7 @@ bool b5 = 'á'.isLowerCase(ignoreSymbols: false); // true
 
 
 
-### range, inclusive
+## range, inclusive
 Generates a list of integers:
 
 
@@ -486,7 +551,7 @@ range(1, -5, -2) // [1, -1, -3]
 inclusive(1, -5, -2) // [1, -1, -3, -5]
 ```
 
-### rangeString, inclusiveString
+## rangeString, inclusiveString
 Similar to ```range``` and ```inclusive```. Strings must have exactly one character:
 ```dart
 rangeString('a', 'f') // 'abcde'
@@ -496,41 +561,6 @@ rangeString('a', 'g', 2) // 'ace'
 inclusiveString('a', 'c') // 'abc'
 inclusiveString('c', 'a') // 'cba'
 inclusiveString('a', 'g', 2) // 'aceg'
-```
-
-## deepEquals
-
-```deepEquals``` can check equality for nested lists, sets, and maps.
-
-By default, Dart doesn't compare elements in a list for equality.
-
-```dart
-[1, 2] == [1, 2] // false
-```
-
-Use ```deepEquals``` for this and other iterables:
-
-```dart
-bool a = deepEquals([1, 2], [1, 2]); // true
-bool b = deepEquals(
-    {1: 2, 3: [4,5]},
-    {3: inclusive(4, 5), 1: 2}
-); // true
-bool c = deepEquals(1, 1); // true
-```
-
-
-## deepContains
-```deepContains``` uses ```deepEquals``` to check if an iterable contains an element:
-
-```dart
-List l = [[1, 2], {3: 4}];
-Map m = {3: 4};
-
-// By default:
-bool b = l.contains(m); // false
-
-bool b2 = l.deepContains(m); // true
 ```
 
 ## Operators for strings and lists

@@ -1,3 +1,11 @@
+## 0.5.0
+
+* Added ```before``` and ```after```.
+* Added ```startsWith``` for lists.
+* Added ```indices``` to search for sublists. ```elemIndices``` deprecated.
+* Added ```replace```. ```replaceFirst``` and ```replaceAll``` for lists are deprecated.
+* ```intercalate``` now has optional count parameter.
+
 ## 0.4.4
 
 * Documentation correction
