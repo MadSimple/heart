@@ -161,6 +161,7 @@ void main() {
       expect([1, 2, 3].after([1, 2]), [3]);
       expect([1, 2, 3].after([5], skip: 100), null);
       expect([1, 2, 3].after([]), [1, 2, 3]);
+      expect([1, 2, 3].after([], skip: 3), []);
       expect([1, 2, 3, 3].after([3]), [3]);
       expect([1, 2, 3, 3].after([3], skip: 1), []);
       expect([1, 2, 3, 3].after([3], skip: 2), null);
@@ -445,6 +446,13 @@ void main() {
       expect(([1, 2] * 5).replace([1, 2], [3], null), [3] * 5);
       expect([1, 1, 2, 3].replace([1]), [2, 3]);
       expect([1, 1, 2, 3].replace([1, 1]), [2, 3]);
+
+      expect(inclusive(100000).shuffled(seed: 1),
+          inclusive(100000).shuffled(seed: 1));
+      expect(
+          deepEquals(inclusive(100000).shuffled(seed: 1),
+              inclusive(100000).shuffled(seed: null)),
+          false);
     });
   });
 
@@ -744,6 +752,7 @@ void main() {
       expect('h' < 'a', false);
 
       expect(''.after(''), '');
+      expect(''.after('', skip: 1), null);
       expect(''.after('a'), null);
       expect('abc'.after(''), 'abc');
       expect('s'.after('a'), null);
@@ -896,6 +905,7 @@ void main() {
       expect(range(-3), [-2, -1, 0]);
       expect(range(1, 3), [1, 2]);
       expect(range(-3, -3), []);
+      expect(range(-6, -3), [-6, -5, -4]);
       expect(range(-3, -6), [-3, -4, -5]);
       expect(range(1, -3), [1, 0, -1, -2]);
       expect(range(-2, 2, 2), [-2, 0]);
@@ -915,6 +925,7 @@ void main() {
       expect(range(-5, 0, 1), inclusive(-5, -1));
       expect(range(0, -4, -2), [0, -2]);
       expect(range(-3, -3, 100), []);
+      expect(range(-3, -3, -100), []);
       expect(range(-3, -4, -100), [-3]);
       expect(() => range(-3, -4, 100), throwsArgumentError);
       expect(() => range(-3, -4, 0), throwsArgumentError);
@@ -956,6 +967,13 @@ void main() {
             {3, 4}
           ].deepContains({3, nums(4, 4).first}),
           true);
+      expect(
+          [
+            {1: 2},
+            {3: 4}
+          ].deepContains({3: 4}),
+          true);
+      expect([1, 2] == [1, 2], false);
 
       final List l1 = ['one', 'two', 'three'];
       final List l2 = [1, 2, 3];

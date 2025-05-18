@@ -1,6 +1,6 @@
 name: heart
 description: 'Extension methods for Strings and Lists, inspired by Haskell'
-version: 0.5.0
+version: 0.5.3
 homepage: 'https://github.com/MadSimple/heart/'
 
 environment:

@@ -1,3 +1,15 @@
+## 0.5.3
+
+* Slight optimizations to ```before``` and ```after```
+
+## 0.5.2
+
+* ```shuffled``` now has seed parameter
+
+## 0.5.1
+
+* README changes
+
 ## 0.5.0
 
 * Added ```before``` and ```after```.

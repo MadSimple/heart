@@ -309,24 +309,19 @@ List<List<T>> splitAtList<T>(int n, Iterable<T> it) {
 }
 
 /// Return a shuffled List.
-List<T> shuffledList<T>(Iterable<T> it, bool cryptographicallySecure) {
+List<T> shuffledList<T>(
+    Iterable<T> it, bool cryptographicallySecure, int? seed) {
   List<T> copy = List.from(it);
-  Random r = cryptographicallySecure ? Random.secure() : Random();
+  Random r = cryptographicallySecure ? Random.secure() : Random(seed);
   copy.shuffle(r);
   return copy;
 }
 
 /// Return a shuffled String.
-String shuffledString(String s, bool cryptographicallySecure) {
+String shuffledString(String s, bool cryptographicallySecure, int? seed) {
   List<int> codes = List.from(s.codeUnits);
-
-  if (cryptographicallySecure) {
-    codes.shuffle();
-  } else {
-    codes.shuffle(Random.secure());
-  }
-
-  return String.fromCharCodes(codes);
+  return String.fromCharCodes(
+      shuffledList(codes, cryptographicallySecure, seed));
 }
 
 /// Join two iterables by taking turns.
@@ -656,11 +651,14 @@ List<T> listNub<T>(Iterable<T> original, [Iterable<T>? itemsToNub]) {
   }
   List<T> result = [];
   for (var v in original) {
+    // Add v if it's not in result, then continue
     if (!deepContains(result, v)) {
       result.add(v);
       continue;
     }
-    // Add v again if it's not in the nub list
+    // v already in result
+
+    // add again if not in the nub list
     if (itemsToNub != null && !deepContains(itemsToNub, v)) {
       result.add(v);
     }
@@ -929,28 +927,31 @@ List<int> nums(int a, [int? b, int? step]) {
 List<int> range(int a, [int? b, int? step]) {
   // Only one argument given
   if (b == null) {
-    if (a > 0) {
-      return inclusive(0, a - 1);
-    }
-    if (a < 0) {
-      return inclusive(a + 1, 0);
-    }
-    // a = 0
-    return [];
+    return a >= 0
+        ? List.generate(a, (index) => index)
+        : List.generate(-a, (index) => index + a + 1);
   }
+
+  List<int> result = [];
 
   // Multiple arguments
   if (a < b) {
     if (step != null && step <= 0) {
       throw ArgumentError('step must be positive if beginning < end');
     }
-    return inclusive(a, b - 1, step);
+    for (int i = a; i < b; i += step ?? 1) {
+      result.add(i);
+    }
+    return result;
   }
   if (a > b) {
     if (step != null && step >= 0) {
       throw ArgumentError('step must be negative if beginning > end');
     }
-    return inclusive(a, b + 1, step);
+    for (int i = a; i > b; i += step ?? -1) {
+      result.add(i);
+    }
+    return result;
   }
 
   // a = b
@@ -973,18 +974,22 @@ List<int> inclusive(int a, [int? b, int? step]) {
 
   List<int> result = [];
   if (a < b) {
-    step != null && step <= 0
-        ? {throw ArgumentError('step must be positive if beginning < end')}
-        : {
-            for (int i = a; i <= b; i += step ?? 1) {result.add(i)}
-          };
+    if (step != null && step <= 0) {
+      throw ArgumentError('step must be positive if beginning < end');
+    }
+    for (int i = a; i <= b; i += step ?? 1) {
+      result.add(i);
+    }
+    return result;
   }
   if (a > b) {
-    step != null && step >= 0
-        ? {throw ArgumentError('step must be negative if beginning > end')}
-        : {
-            for (int i = a; i >= b; i += step ?? -1) {result.add(i)}
-          };
+    if (step != null && step >= 0) {
+      throw ArgumentError('step must be negative if beginning > end');
+    }
+    for (int i = a; i >= b; i += step ?? -1) {
+      result.add(i);
+    }
+    return result;
   }
 
   return result;
@@ -1411,21 +1416,20 @@ List<T>? afterList<T>(Iterable<T> original, Iterable<T> sub, [int skip = 0]) {
     return originalCopy.sublist(skip);
   }
 
-  // indicesList doesn't work with empty sublist, but startsWithList does
-  List<int> subIndices = [];
-  for (int i in range(maxOccurrences)) {
-    if (startsWithList(originalCopy.sublist(i), subCopy)) {
-      subIndices.add(i);
+  int skipCopy = skip;
+  for (int currentIndex in range(maxOccurrences)) {
+    if (deepEquals(
+        originalCopy.sublist(currentIndex, currentIndex + subCopy.length),
+        subCopy)) {
+      if (skipCopy == 0) {
+        return originalCopy.sublist(currentIndex + subCopy.length);
+      } else {
+        skipCopy--;
+      }
     }
   }
 
-  if (skip >= subIndices.length) {
-    return null;
-  }
-
-  subIndices = dropList(skip, subIndices);
-  int startIndex = subIndices.first + sub.length;
-  return originalCopy.sublist(startIndex);
+  return null;
 }
 
 /// Get all the characters before a substring
@@ -1445,22 +1449,22 @@ List<T>? beforeList<T>(Iterable<T> original, Iterable<T> sub, [int skip = 0]) {
 
   List<T> originalCopy = List.from(original);
   List<T> subCopy = List.from(sub);
-  List<int> subIndices = [];
   int maxOccurrences = originalCopy.length - subCopy.length + 1;
 
-  // indicesList doesn't work with empty sublist, but startsWithList does
-  for (int i in range(maxOccurrences)) {
-    if (startsWithList(originalCopy.sublist(i), subCopy)) {
-      subIndices.add(i);
+  int skipCopy = skip;
+  for (int currentIndex in range(maxOccurrences)) {
+    if (deepEquals(
+        originalCopy.sublist(currentIndex, currentIndex + subCopy.length),
+        subCopy)) {
+      if (skipCopy == 0) {
+        return originalCopy.sublist(0, currentIndex);
+      } else {
+        skipCopy--;
+      }
     }
   }
 
-  if (skip >= subIndices.length) {
-    return null;
-  }
-
-  subIndices = dropList(skip, subIndices);
-  return originalCopy.sublist(0, subIndices.first);
+  return null;
 }
 
 /// Equivalent to String .startsWith

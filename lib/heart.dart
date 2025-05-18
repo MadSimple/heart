@@ -201,9 +201,14 @@ extension HeartIterableE<E> on Iterable<E> {
   /// Dart's shuffle() method is void.
   ///
   /// Cryptographically secure option:
-  /// [1,2,3,4,5].shuffled(cryptographicallySecure: true)
-  List<E> shuffled({bool cryptographicallySecure = false}) {
-    return h.shuffledList(this, cryptographicallySecure);
+  /// [1, 2, 3, 4, 5].shuffled(cryptographicallySecure: true)
+  ///
+  /// Specify seed for RNG:
+  /// [1, 2, 3, 4, 5].shuffled(seed: 1)
+  ///
+  /// Seed is ignored if [cryptographicallySecure] is true.
+  List<E> shuffled({bool cryptographicallySecure = false, int? seed}) {
+    return h.shuffledList(this, cryptographicallySecure, seed);
   }
 
   /// Removes first n elements.
@@ -860,8 +865,13 @@ extension HeartString on String {
 
   /// Shuffle a String, with option to make it
   /// cryptographically secure.
-  String shuffled({cryptographicallySecure = false}) {
-    return h.shuffledString(this, cryptographicallySecure);
+  ///
+  /// Specify seed for RNG:
+  /// 'hello'.shuffled(seed: 1)
+  ///
+  /// Seed is ignored if [cryptographicallySecure] is true.
+  String shuffled({cryptographicallySecure = false, int? seed}) {
+    return h.shuffledString(this, cryptographicallySecure, seed);
   }
 
   /// Keeps characters of a String that meet criteria.
