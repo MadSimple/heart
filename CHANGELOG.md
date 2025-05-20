@@ -1,3 +1,7 @@
+## 0.5.4
+
+* Updated repository in pubspec
+
 ## 0.5.3
 
 * Slight optimizations to ```before``` and ```after```
