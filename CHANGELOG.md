@@ -1,3 +1,7 @@
+## 0.5.5
+
+* Methods for lists of numbers rewritten
+
 ## 0.5.4
 
 * Updated repository in pubspec

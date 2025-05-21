@@ -563,13 +563,47 @@ void main() {
   });
   group('HeartIterableNum', () {
     test('Extension methods for iterables with num elements', () {
+      expect([1.1, 2, 3].sum(), 6.1);
+      expect(<num>[].sum(), 0.0);
+      expect(<num>[].product(), 0.0);
+      expect(<num>[1, 2, 3].product(), 6.0);
+      expect(<num>[1, 2, 3].average(), 2.0);
+      expect(<num>[].average(), 0);
+
+      expect([0, 5, 6.0].insertInOrder(-1), [-1.0, 0.0, 5.0, 6.0]);
+      expect([0, 5, 6.0].insertInOrder(7), [0.0, 5.0, 6.0, 7.0]);
+      expect([0, 5, 6.0].insertInOrder(4), [0.0, 4.0, 5.0, 6.0]);
+      expect([3, 1.1, 2.2].insertInOrder(1), [1.0, 3.0, 1.1, 2.2]);
+      List<num> numList = [4, 1, 6.0];
+      expect(numList.insertInOrder(4), [4.0, 4.0, 1.0, 6.0]);
+      expect(numList.insertInOrder(-4), [-4.0, 4.0, 1.0, 6.0]);
+      expect(numList.insertInOrder(44), [4.0, 1.0, 6.0, 44.0]);
+      expect(numList.insertInOrder(44.0), [4.0, 1.0, 6.0, 44.0]);
+      expect((<num>[0, 5, 3]).insertInOrder(4) is List<int>, false);
+      expect((<num>[0, 5, 3]).insertInOrder(4) is List<double>, true);
+      expect([0, 5, 3.0].insertInOrder(4) is List<int>, false);
+
+      expect([1.1, 0, 3.1].ascending(), [1.1, 0, 3.1].descending().backwards());
+    });
+  });
+  group('HeartIterableDouble', () {
+    test('Extension methods for iterables with double elements', () {
       expect([1.1, 2.2, 3.3].sum(), 6.6);
       expect(<double>[].sum(), 0.0);
       expect(<double>[].product(), 0.0);
       expect(<double>[1, 2, 3].product(), 6.0);
       expect(<double>[1, 2, 3].average(), 2.0);
-      expect(<num>[].average(), 0);
+      expect(<double>[].average(), 0);
 
+      expect([0.0, 5.0, 6.0].insertInOrder(-1), [-1.0, 0.0, 5.0, 6.0]);
+      expect([0.0, 5.0, 6.0].insertInOrder(7), [0.0, 5.0, 6.0, 7.0]);
+      expect([0.0, 5.0, 6.0].insertInOrder(4), [0.0, 4.0, 5.0, 6.0]);
+      List<double> doubleList = [4.0, 1.0, 6.0];
+      expect(doubleList.insertInOrder(4), [4.0, 4.0, 1.0, 6.0]);
+      expect(doubleList.insertInOrder(-4), [-4.0, 4.0, 1.0, 6.0]);
+      expect(doubleList.insertInOrder(44), [4.0, 1.0, 6.0, 44.0]);
+      expect(doubleList.insertInOrder(44.0), [4.0, 1.0, 6.0, 44.0]);
+      expect(doubleList.insertInOrder(5), [4.0, 1.0, 5.0, 6.0]);
       expect([0.0, 5.0, 3.0].insertInOrder(4), [0.0, 4.0, 5.0, 3.0]);
 
       expect([1.1, 0.1, 3.1].ascending(),
@@ -580,8 +614,19 @@ void main() {
     test('Extension methods for iterables with int elements', () {
       expect([1, 2, 3].sum(), 6);
       expect([97, 98].chrs(), 'ab');
+      expect(<int>[].chrs(), '');
+      List<int> intList = [4, 1, 6];
+      expect(intList.insertInOrder(44), [4, 1, 6, 44]);
+      expect(intList.insertInOrder(-44), [-44, 4, 1, 6]);
+      expect(intList.insertInOrder(5), [4, 1, 5, 6]);
+      expect([1, 4, 6].insertInOrder(2), [1, 2, 4, 6]);
+      expect([1, 4, 6].insertInOrder(2), [1, 2, 4, 6]);
+
+      expect(intList.ascending(), [1, 4, 6]);
+      expect(intList.descending(), [1, 4, 6].backwards());
 
       expect([1, 0, 3].ascending(), [1, 0, 3].descending().backwards());
+      expect([1, 0, 3].ascending(), [0, 1, 3]);
 
       expect(<int>[1, 2, 3].product(), 6);
     });

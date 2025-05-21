@@ -481,87 +481,130 @@ extension HeartIterableIterable<E> on Iterable<Iterable<E>> {
   }
 }
 
-/// Extension methods for collection of doubles
+/// Extension methods for collection of nums.
+/// These methods will be used when a list has both ints and doubles.
 extension HeartIterableNum on Iterable<num> {
-  /// Adds all the elements
+  /// Adds all the elements of a list.
   ///
-  /// [1.1, 2.2, 3.3].sum() returns 6.6
+  /// [1, 2.2, 3.3].sum() returns 6.6
   double sum() {
-    return h.sumNum(this).toDouble();
+    return h.sumDouble(this);
   }
 
-  /// Multiplies all numbers together
+  /// Multiplies all numbers of a list together.
+  /// [1, 2, 3.0].product() returns 6.0
   double product() {
-    return h.productNum(this).toDouble();
+    return h.productDouble(this);
   }
 
-  /// Returns a double even if inputs are ints.
+  /// Returns the average of all numbers in a list
+  /// [1, 2, 3.0].average() returns 2.0
   double average() {
     return h.listAverage(this);
   }
 
-  /// Inserts [value] before the first element that is greater.
+  /// Inserts [value] before the first element that is greater or equal.
   ///
-  /// [0, 5, 3].insertInOrder(4) returns [0, 4, 5, 3]
+  /// [3, 1.1, 2.2].insertInOrder(1) returns [1.0, 3.0, 1.1, 2.2]
   ///
   /// Does not sort.
   /// Can use .ascending() or .descending() to sort.
-  List<double> insertInOrder(double value) {
-    return h.insertInOrder(value, this as List<double>);
+  List<double> insertInOrder(num value) {
+    return h.insertInOrder(value, this);
   }
 
-  ///Returns a List using Dart's sort() method.
+  /// Returns a List using Dart's sort() method.
+  ///
+  /// Dart's sort() method by itself is void.
+  ///
+  /// [1, 0.1, 3.1].ascending() returns [0.1, 1.0, 3.1]
+  List<double> ascending() {
+    return h.ascendingListDouble(this);
+  }
+
+  /// Returns a List that is the reverse of Dart's sort() method.
+  ///
+  /// Dart's sort() method by itself is void.
+  ///
+  /// [1, 0.1, 3.1].descending() returns [3.1, 1.0, 0.1]
+  List<double> descending() {
+    return h.descendingListDouble(this);
+  }
+}
+
+/// Extension methods for collection of doubles
+extension HeartIterableDouble on Iterable<double> {
+  /// Adds all the elements
+  ///
+  /// [1.1, 2.2, 3.3].sum() returns 6.6
+  double sum() {
+    return h.sumDouble(this);
+  }
+
+  /// Multiplies all numbers of a list together.
+  /// [2.0, 3.0, 5.0].product() returns 30.0
+  double product() {
+    return h.productDouble(this);
+  }
+
+  /// Returns the average of all numbers in a list.
+  /// [2.0, 3.0, 5.0].average() returns 3.333333...
+  double average() {
+    return h.listAverage(this);
+  }
+
+  /// Inserts [value] before the first element that is greater or equal.
+  ///
+  /// [0.0, 5.5, 4.4].insertInOrder(1) returns [0.0, 1.0, 5.5, 4.4]
+  ///
+  /// Does not sort.
+  /// Can use .ascending() or .descending() to sort.
+  List<double> insertInOrder(num value) {
+    return h.insertInOrder(value, this);
+  }
+
+  /// Returns a List using Dart's sort() method.
   ///
   /// Dart's sort() method by itself is void.
   ///
   /// [1.1, 0.1, 3.1].ascending() returns [0.1, 1.1, 3.1].
   List<double> ascending() {
-    return h.ascendingList(this as List<double>);
+    return h.ascendingListDouble(this);
   }
 
-  ///Returns a List that is the reverse of Dart's sort() method.
+  /// Returns a List that is the reverse of Dart's sort() method.
   ///
   /// Dart's sort() method by itself is void.
   ///
   /// [1.1, 0.1, 3.1].descending() returns [3.1, 1.1, 0.1].
   List<double> descending() {
-    return h.descendingList(this as List<double>);
+    return h.descendingListDouble(this);
   }
 }
 
 /// Extension methods for collection of integers
 extension HeartIterableInt on Iterable<int> {
-  /// Sum integers.
+  /// Adds all the elements
   ///
   /// [1, 2, 3].sum() returns 6
   int sum() {
-    return h.sumNum(this);
+    return h.sumInt(this);
   }
 
-  /// Returns a String from character codes.
-  String chrs() {
-    return h.chrs(this);
+  /// Multiplies all numbers of a list together.
+  /// [2, 3, 5].product() returns 30
+  int product() {
+    return h.productInt(this);
   }
 
-  ///Returns a List using Dart's sort() method.
-  ///
-  /// Dart's sort() method by itself is void.
-  ///
-  /// [1, 0, 3].ascending() returns [0, 1, 3].
-  List<int> ascending() {
-    return h.ascendingList(this);
+  /// Returns the average of all entries.
+  /// Result is a double even though entries are ints.
+  /// [1, 10].average() returns 5.5
+  double average() {
+    return h.listAverage(this);
   }
 
-  ///Returns the reverse of Dart's sort() method.
-  ///
-  /// Dart's sort() method by itself is void.
-  ///
-  /// [1, 0, 3].descending() returns [3, 1, 0]
-  List<int> descending() {
-    return h.descendingList(this);
-  }
-
-  /// Inserts [value] before the first element that is greater.
+  /// Inserts [value] before the first element that is greater or equal.
   ///
   /// [0, 5, 3].insertInOrder(4) returns [0, 4, 5, 3]
   ///
@@ -571,9 +614,27 @@ extension HeartIterableInt on Iterable<int> {
     return h.insertInOrder(value, this);
   }
 
-  /// Multiplies elements together.
-  int product() {
-    return h.productNum(this).toInt();
+  /// Returns a List using Dart's sort() method.
+  ///
+  /// Dart's sort() method by itself is void.
+  ///
+  /// [1, 0, 3].ascending() returns [0, 1, 3].
+  List<int> ascending() {
+    return h.ascendingListInt(this);
+  }
+
+  /// Returns a List that is the reverse of Dart's sort() method.
+  ///
+  /// Dart's sort() method by itself is void.
+  ///
+  /// [1, 0, 3].descending() returns [3, 1, 0].
+  List<int> descending() {
+    return h.descendingListInt(this);
+  }
+
+  /// Returns a String from character codes.
+  String chrs() {
+    return h.chrs(this);
   }
 }
 
@@ -605,24 +666,24 @@ extension HeartIterableString on Iterable<String> {
     return h.unwords(this);
   }
 
-  ///Returns a List using Dart's sort() method.
+  /// Returns a List using Dart's sort() method.
   ///
   /// Dart's sort() method by itself is void.
   ///
   /// ['bravo', 'alpha', 'charlie'].ascending()
   /// returns ['alpha', 'bravo', 'charlie'].
   List<String> ascending() {
-    return h.ascendingList(this as List<String>);
+    return h.ascendingListString(this as List<String>);
   }
 
-  ///Returns the reverse of Dart's sort() method.
+  /// Returns the reverse of Dart's sort() method.
   ///
   /// Dart's sort() method by itself is void.
   ///
   /// ['bravo', 'alpha', 'charlie'].descending()
   /// returns ['charlie', 'bravo', 'alpha'].
   List<String> descending() {
-    return h.descendingList(this as List<String>);
+    return h.descendingListString(this as List<String>);
   }
 }
 
@@ -1029,7 +1090,7 @@ extension HeartString on String {
     return h.riffleInString(this);
   }
 
-  /// Inserts [substring] before the first character that is greater.
+  /// Inserts [substring] before the first character that is greater or equal.
   ///
   /// 'hello'.insertInOrder('i') returns 'heillo'.
   ///

@@ -550,24 +550,56 @@ String reversedSortedString(String s) {
 }
 
 /// Regular sorted list.
-List<T> ascendingList<T>(Iterable<T> it) {
-  List<T> copy = List.from(it);
+List<int> ascendingListInt(Iterable<int> it) {
+  List<int> copy = List.from(it);
+  copy.sort();
+  return copy;
+}
+
+/// Regular sorted list.
+List<double> ascendingListDouble(Iterable<num> it) {
+  List<double> copy = [];
+  for (num n in it) {
+    copy.add(n.toDouble());
+  }
+  copy.sort();
+  return copy;
+}
+
+/// Regular sorted list.
+List<String> ascendingListString(Iterable<String> it) {
+  List<String> copy = List.from(it);
   copy.sort();
   return copy;
 }
 
 /// Reversed sorted list.
-List<T> descendingList<T>(Iterable<T> it) {
+List<int> descendingListInt(Iterable<int> it) {
   try {
-    return ascendingList(it).reversed.toList();
+    return ascendingListInt(it).reversed.toList();
+  } catch (e) {
+    return it.toList();
+  }
+}
+
+/// Reversed sorted list.
+List<double> descendingListDouble(Iterable<num> it) {
+  return ascendingListDouble(it).reversed.toList();
+}
+
+/// Reversed sorted list.
+List<String> descendingListString(Iterable<String> it) {
+  try {
+    return ascendingListString(it).reversed.toList();
   } catch (e) {
     return it.toList();
   }
 }
 
 /// Sum elements.
-sumNum<T extends num>(Iterable<T> l) {
-  num result = 0;
+sumDouble(Iterable<num> l) {
+  double result = 0;
+
   for (num n in l) {
     result += n;
   }
@@ -575,16 +607,39 @@ sumNum<T extends num>(Iterable<T> l) {
   return result;
 }
 
+/// Sum elements.
+sumInt(Iterable<int> l) {
+  int result = 0;
+
+  for (int n in l) {
+    result += n;
+  }
+
+  return result;
+}
+
 /// Multiply all elements.
-productNum<T extends num>(Iterable<T> l) {
+double productDouble(Iterable<num> l) {
   if (l.isEmpty) {
     return 0;
   }
-  num result = 1;
+  double result = 1;
   for (num n in l) {
     result *= n;
   }
-  return result as T;
+  return result.toDouble();
+}
+
+/// Multiply all elements.
+int productInt(Iterable<int> l) {
+  if (l.isEmpty) {
+    return 0;
+  }
+  int result = 1;
+  for (int n in l) {
+    result *= n;
+  }
+  return result;
 }
 
 /// Average (mean) of numbers.
@@ -592,9 +647,9 @@ double listAverage(Iterable<num> it) {
   if (it.isEmpty) {
     return 0;
   }
-  num result = 0;
+  double result = 0;
   for (num n in it) {
-    result += n;
+    result += n.toDouble();
   }
   return result / it.length;
 }
@@ -1236,17 +1291,41 @@ List<int> indicesList<T>(Iterable<T> original, Iterable<T> sublist,
   return result;
 }
 
-/// Insert an element before the first greater element
-List<T> insertInOrder<T>(T n, Iterable<T> it) {
-  List<T> l = List.from(it);
-  List<T> result = List.from(l);
-  for (int i in range(l.length)) {
-    if ((l[i] as num) >= (n as num)) {
-      result.insert(i, n);
-      return result;
+/// Insert an element before the first element that is greater or equal
+insertInOrder(num n, Iterable original) {
+  bool returnListInt = true;
+  if (original is List<num> && original is! List<int>) {
+    returnListInt = false;
+  } else if (n is! int) {
+    returnListInt = false;
+  } else {
+    for (var v in original) {
+      if (v is! int) {
+        returnListInt = false;
+        break;
+      }
     }
   }
-  result = result + [n];
+
+  var originalCopy = returnListInt ? <int>[] : <double>[];
+  var result = returnListInt ? <int>[] : <double>[];
+  if (returnListInt) {
+    originalCopy =
+        result = original.map((element) => element.toInt() as int).toList();
+  } else {
+    originalCopy = result =
+        original.map((element) => element.toDouble() as double).toList();
+  }
+
+  for (int i in range(originalCopy.length)) {
+    if ((originalCopy[i]) >= n) {
+      result.insert(i, returnListInt ? n.toInt() : n.toDouble());
+      return returnListInt
+          ? result.map((element) => element.toInt()).toList()
+          : result.map((element) => element.toDouble()).toList();
+    }
+  }
+  result.add(returnListInt ? n.toInt() : n.toDouble());
   return result;
 }
 
