@@ -833,7 +833,7 @@ List<T> replaceAllList<T>(Iterable<T> it, T from, [T? to]) {
   List<T> result = List.from(it);
   List<int> indicesToReplace = [];
 
-  for (int i in range(result.length)) {
+  for (int i = 0; i < result.length; i++) {
     if (deepEquals(result[i], from)) {
       indicesToReplace.add(i);
     }
@@ -861,7 +861,7 @@ List<T> replaceList<T>(Iterable<T> it, bool replaceAll, T from, [dynamic to]) {
 
   List<int> indicesToReplace = [];
   List<T> copy = List.from(it);
-  for (int i in range(it.length)) {
+  for (int i = 0; i < it.length; i++) {
     if (deepEquals(copy[i], from)) {
       indicesToReplace.add(i);
       if (!replaceAll) {
@@ -1232,7 +1232,7 @@ List<int> elemIndicesString(String sub, String original) {
   }
   List<int> result = [];
 
-  for (int i in range(original.length)) {
+  for (int i = 0; i < original.length; i++) {
     if (original.substring(i).startsWith(sub)) {
       result.add(i);
     }
@@ -1317,7 +1317,7 @@ insertInOrder(num n, Iterable original) {
         original.map((element) => element.toDouble() as double).toList();
   }
 
-  for (int i in range(originalCopy.length)) {
+  for (int i = 0; i < originalCopy.length; i++) {
     if ((originalCopy[i]) >= n) {
       result.insert(i, returnListInt ? n.toInt() : n.toDouble());
       return returnListInt
@@ -1496,7 +1496,7 @@ List<T>? afterList<T>(Iterable<T> original, Iterable<T> sub, [int skip = 0]) {
   }
 
   int skipCopy = skip;
-  for (int currentIndex in range(maxOccurrences)) {
+  for (int currentIndex = 0; currentIndex < maxOccurrences; currentIndex++) {
     if (deepEquals(
         originalCopy.sublist(currentIndex, currentIndex + subCopy.length),
         subCopy)) {
@@ -1531,7 +1531,7 @@ List<T>? beforeList<T>(Iterable<T> original, Iterable<T> sub, [int skip = 0]) {
   int maxOccurrences = originalCopy.length - subCopy.length + 1;
 
   int skipCopy = skip;
-  for (int currentIndex in range(maxOccurrences)) {
+  for (int currentIndex = 0; currentIndex < maxOccurrences; currentIndex++) {
     if (deepEquals(
         originalCopy.sublist(currentIndex, currentIndex + subCopy.length),
         subCopy)) {
@@ -1589,7 +1589,7 @@ List<T> replaceCountList<T>(Iterable<T> original, Iterable<T> from,
   }
 
   List<T> result = originalCopy.sublist(0, replaceIndices.first);
-  for (int i in range(replaceIndices.length)) {
+  for (int i = 0; i < replaceIndices.length; i++) {
     if (i == replaceIndices.length - 1) {
       result += toCopy +
           originalCopy.sublist(
