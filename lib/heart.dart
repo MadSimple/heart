@@ -1,6 +1,8 @@
 /// Extension methods, with extra functions below
 library;
 
+import 'dart:math';
+
 import 'src/helper.dart' as h;
 
 /// Compare dynamic iterables with deepEquals
@@ -200,15 +202,12 @@ extension HeartIterableE<E> on Iterable<E> {
   ///
   /// Dart's shuffle() method is void.
   ///
-  /// Cryptographically secure option:
-  /// [1, 2, 3, 4, 5].shuffled(cryptographicallySecure: true)
-  ///
-  /// Specify seed for RNG:
-  /// [1, 2, 3, 4, 5].shuffled(seed: 1)
-  ///
-  /// Seed is ignored if [cryptographicallySecure] is true.
-  List<E> shuffled({bool cryptographicallySecure = false, int? seed}) {
-    return h.shuffledList(this, cryptographicallySecure, seed);
+  /// Can specify a Random:
+  /// ```dart
+  /// List<int> l = [1, 2, 3].shuffled(Random.secure());
+  /// ```
+  List<E> shuffled([Random? random]) {
+    return h.shuffledList(this, random);
   }
 
   /// Removes first n elements.
@@ -924,15 +923,14 @@ extension HeartString on String {
     return h.stringEvery(allFunction, this);
   }
 
-  /// Shuffle a String, with option to make it
-  /// cryptographically secure.
+  /// Returns a shuffled String.
   ///
-  /// Specify seed for RNG:
-  /// 'hello'.shuffled(seed: 1)
-  ///
-  /// Seed is ignored if [cryptographicallySecure] is true.
-  String shuffled({cryptographicallySecure = false, int? seed}) {
-    return h.shuffledString(this, cryptographicallySecure, seed);
+  /// Can specify a Random:
+  /// ```dart
+  /// String h = 'hello'.shuffled(Random.secure());
+  /// ```
+  String shuffled([Random? random]) {
+    return h.shuffledString(this, random);
   }
 
   /// Keeps characters of a String that meet criteria.
@@ -1325,7 +1323,9 @@ List<List<T>> zip<T>(Iterable<Iterable<T>> it) {
 /// returns [5, 7, 9].
 ///
 /// May have to cast to another data type to use other methods:
-// zip2([[1,2,3],[4,5,6]], (a,b) => a+b).cast<int>().sum() = 21.
+/// ```dart
+/// zip2([[1,2,3],[4,5,6]], (a,b) => a+b).cast<int>().sum() = 21.
+/// ```
 List zip2<T>(Iterable<Iterable<T>> it, dynamic Function(T a, T b) zipFunction) {
   return h.zip2(it, zipFunction);
 }
@@ -1337,7 +1337,9 @@ List zip2<T>(Iterable<Iterable<T>> it, dynamic Function(T a, T b) zipFunction) {
 /// returns [3,3,3].
 ///
 /// May have to cast to another data type to use other methods:
-// zip3([[0,0,0],[1,1,1],[2,2,2]], (a,b,c) => a+b+c).cast<int>().sum() = 9.
+/// ```dart
+/// zip3([[0,0,0],[1,1,1],[2,2,2]], (a,b,c) => a+b+c).cast<int>().sum() = 9.
+/// ```
 List zip3<T>(
     Iterable<Iterable<T>> it, dynamic Function(T a, T b, T c) zipFunction) {
   return h.zip3(it, zipFunction);
@@ -1350,7 +1352,9 @@ List zip3<T>(
 /// returns [30,30].
 ///
 /// May have to cast to another data type to use other methods:
-// zip4([[0,0],[5,5],[10,10],[15,15]], (a,b,c,d) => a+b+c+d).cast<int>().sum() = 60.
+/// ```dart
+/// zip4([[0,0],[5,5],[10,10],[15,15]], (a,b,c,d) => a+b+c+d).cast<int>().sum() = 60.
+/// ```
 List zip4<T>(Iterable<Iterable<T>> it,
     dynamic Function(T a, T b, T c, T d) zipFunction) {
   return h.zip4(it, zipFunction);

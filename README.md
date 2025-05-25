@@ -85,19 +85,15 @@ String s = 'hello'.backwards(); // 'olleh'
 ```
 
 ## shuffled
-Returns a shuffled list or string, with cryptographically secure and seed options.
+Returns a shuffled list or string.
 (Dart's ```shuffle``` method is void)
 
 ```dart
 List<int> l = [1, 2, 3, 4, 5].shuffled();
-// or
-List<int> l = [1, 2, 3, 4, 5].shuffled(cryptographicallySecure: true);
+// Specify a Random object:
+List<int> l = [1, 2, 3, 4, 5].shuffled(Random.secure());
 
 String s = 'hello'.shuffled();
-
-// Specify seed for RNG
-'hello'.shuffled(seed: 1)
-// Seed is ignored if 'cryptographicallySecure' is true
 ```
 
 ## sum, product, average

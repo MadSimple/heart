@@ -309,19 +309,16 @@ List<List<T>> splitAtList<T>(int n, Iterable<T> it) {
 }
 
 /// Return a shuffled List.
-List<T> shuffledList<T>(
-    Iterable<T> it, bool cryptographicallySecure, int? seed) {
+List<T> shuffledList<T>(Iterable<T> it, Random? random) {
   List<T> copy = List.from(it);
-  Random r = cryptographicallySecure ? Random.secure() : Random(seed);
-  copy.shuffle(r);
+  copy.shuffle(random);
   return copy;
 }
 
 /// Return a shuffled String.
-String shuffledString(String s, bool cryptographicallySecure, int? seed) {
+String shuffledString(String s, Random? random) {
   List<int> codes = List.from(s.codeUnits);
-  return String.fromCharCodes(
-      shuffledList(codes, cryptographicallySecure, seed));
+  return String.fromCharCodes(shuffledList(codes, random));
 }
 
 /// Join two iterables by taking turns.

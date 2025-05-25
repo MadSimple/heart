@@ -1,3 +1,15 @@
+## 0.5.8
+
+* README update
+
+## 0.5.7
+
+* BREAKING: ```shuffled``` now takes in an optional Random object
+
+## 0.5.6
+
+* Slight code changes, no functionality changed
+
 ## 0.5.5
 
 * Methods for lists of numbers rewritten

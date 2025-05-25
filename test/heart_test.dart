@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:heart/heart.dart';
 import 'package:test/test.dart';
 
@@ -447,11 +449,11 @@ void main() {
       expect([1, 1, 2, 3].replace([1]), [2, 3]);
       expect([1, 1, 2, 3].replace([1, 1]), [2, 3]);
 
-      expect(inclusive(100000).shuffled(seed: 1),
-          inclusive(100000).shuffled(seed: 1));
+      expect(inclusive(1000000).shuffled(Random(1)),
+          inclusive(1000000).shuffled(Random(1)));
       expect(
-          deepEquals(inclusive(100000).shuffled(seed: 1),
-              inclusive(100000).shuffled(seed: null)),
+          deepEquals(inclusive(1000000).shuffled(Random(1)),
+              inclusive(1000000).shuffled()),
           false);
     });
   });
