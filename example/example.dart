@@ -1,4 +1,4 @@
-import 'package:heart/heart.dart';
+import 'package:heart/heart_types.dart';
 
 /// Small sample of package features
 void main() {
@@ -8,19 +8,19 @@ void main() {
   List<String> cardSuits =
       ['spades'] * 13 + ['hearts'] * 13 + ['diamonds'] * 13 + ['clubs'] * 13;
 
-  List deckOfCards = zip([cardValues, cardSuits]);
-  List shuffledDeck = deckOfCards.shuffled();
-
+  List<List<String>> deckOfCards = [cardValues, cardSuits].zip();
   print('Sorted deck: \n$deckOfCards\n');
 
+  List shuffledDeck = deckOfCards.shuffled();
   print('Shuffled deck: \n$shuffledDeck\n');
 
   List redCards = shuffledDeck
       .filter((card) => card.contains('hearts') || card.contains('diamonds'));
 
   print('Red cards:\n$redCards\n');
-  // ----------
 
-  String countdown = inclusive(10, 1).toStringList().intercalate('-');
+  // ------------------
+
+  String countdown = inclusive(10, 1).toStrings().intercalate('-');
   print('$countdown HAPPY NEW YEAR!');
 }

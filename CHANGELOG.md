@@ -1,3 +1,37 @@
+## 0.6.0
+
+Large rewrite. Code should be retested after upgrading.
+README shows updated behavior for all methods.
+
+* BREAKING: ```count``` for iterables takes in an iterable and not an element, and does not include
+  overlap by default.
+* BREAKING: ```indices``` changed to ```indicesOf``` and does not include overlap by default.
+* BREAKING: ```replace``` requires 2 arguments.
+* BREAKING: ```before``` and ```after``` have new parameters and behavior for edge cases. Also added
+  ```beforeWhere``` and ```afterWhere```. ```after``` no longer starts from the end.
+* BREAKING: Zip functions have been consolidated into two extension methods: ```zip```, and
+  ```zipWith```.
+* BREAKING: Removed ```letters``` and ```letterCount```.
+* BREAKING: Removed ```drop```, added ```dropIndices```, ```keepIndices```.
+* BREAKING: Removed ```isUpperCase``` and ```isLowerCase```. Use ```isUpper```,
+  ```isStrictlyUpper```, ```isLower```, and ```isStrictlyLower```.
+* BREAKING: ```insertInOrder``` for iterables takes in an iterable, and inserts all characters for Strings.
+* BREAKING: Removed ```unwords```.
+* BREAKING: ```intersperse``` takes in an iterable instead of an element.
+* BREAKING: ```deepContains``` now takes in an iterable instead of an element.
+* BREAKING: ```every``` returns true for empty String, same as for iterables.
+* BREAKING: ```union``` is now ```addMissing```, ```intersect``` is now ```keep```.
+* BREAKING: Removed ```^``` operator, added ```inc```, ```dec```, ```mult```, and ```div```.
+* Added ```wordCount``` getter for Strings.
+* Added ```toInts```, ```toRounded```, and ```toDoubles```.
+* Added ```frequencies``` and sorting methods for Maps.
+* Added equivalents for Dart collection methods.
+* Added optional parameters for many methods.
+* ```ascending``` and ```descending``` work for any types.
+* ```chr``` and ```chrs``` return empty for invalid codes.
+* Operators separated from other extension methods to make it easier to show/hide.
+* Bug fix: ``inits`` for String is no longer nullable.
+
 ## 0.5.8
 
 * README update
